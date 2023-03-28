@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Locale;
+
 /**
  * @author: Ezekiel Eromosei
  * @created: 28 March 2023
@@ -36,8 +38,9 @@ public class LicenseController {
 
     @PostMapping
     public ResponseEntity<String> createLicense(@PathVariable("organizationId") String organizationId,
-                                                @RequestBody License request) {
-        return new ResponseEntity<>(licenseService.createLicense(request, organizationId), HttpStatus.CREATED);
+                                                @RequestBody License request,
+                                                @RequestHeader(value = "Accept-Language", required = false) Locale locale) {
+        return new ResponseEntity<>(licenseService.createLicense(request, organizationId, locale), HttpStatus.CREATED);
     }
 
     @DeleteMapping(value="/{licenseId}")

@@ -98,3 +98,9 @@
 
 
 # The software developer
+- use RestController
+- use Json for communication -extremely light
+- use clearly named URLs
+- use versioning early on
+
+# DevOps 

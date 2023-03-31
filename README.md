@@ -103,4 +103,31 @@
 - use clearly named URLs
 - use versioning early on
 
+
+
 # DevOps 
+- the design of microservice id all about managing the service after it goes into production
+
+## A Microservice should be self-contained
+- it should be independently deployable with multiple instances started up and torn down 
+
+
+## A microservice should be configurable
+- data should be read from a central source ot passed in as environment variables with no human intervention
+
+
+## A micro service needs be transparent to the client
+- client should never know the exact location of a service
+- instead client should talk to the discovery agent. hence an instance of the microservice is located as opposed to the physical location
+
+## A microservice should communicate its health
+- microservices fail  discovery agent needs route around bad service instances
+
+
+## 4 Principles
+- Service Assembly: building, packaging and deploying of service to guarantee repeatability and consistency
+- Service Bootstrapping: How to separate your application and environment specific config code from run-time code
+  - so that you start from any environment
+- Service registration/discovery: When a new microservice is deployed how to make the service instance discoverable by clients
+- Service Monitoring: we will always have multiple instance of that service running. Devops need ensure any faults are 
+  - routedaround failing services

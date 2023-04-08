@@ -51,6 +51,7 @@ jar tf <JAR_FILE>   -- to show all object in jar
   </configuration>
 </plugin>
 ```
+- spring-boot:build-image
 
 
 ## 3.) Layered Jars
@@ -91,3 +92,5 @@ COPY --from=build application/snapshot-dependencies/ ./
 COPY --from=build application/application/ ./
 ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
 ```
+
+- docker buil -t <name:version> .

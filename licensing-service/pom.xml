@@ -15,6 +15,7 @@
     <description>licensing-service</description>
     <properties>
         <java.version>11</java.version>
+        <docker.image.prefix>ostock</docker.image.prefix>
     </properties>
     <dependencies>
         <dependency>
@@ -55,6 +56,15 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <layers>
+                        <enabled>true</enabled>
+                    </layers>
                 </configuration>
             </plugin>
         </plugins>

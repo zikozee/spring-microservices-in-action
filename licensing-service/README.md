@@ -93,4 +93,4 @@ COPY --from=build application/application/ ./
 ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
 ```
 
-- docker buil -t <name:version> .
+- docker build -t <name:version> .

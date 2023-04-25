@@ -126,5 +126,11 @@ spring:
 ## Configuration used and called from config server
 - http://localhost:8080/actuator/env
   - this shows the profile, config-server file used with its properties
-  
+## Refreshing custom properties
+- this is achieved using @RefreshScope  
+  - note only custom properties are refreshed, database config are not refreshed
+  - there's another way we can achieve same process  using Spring Cloud Bus 
+    - this requires RabbitMQ
+  - but we can always restart our application with new config as docker makes this simple 
+    - (make your app stateless)  12 factor app
 

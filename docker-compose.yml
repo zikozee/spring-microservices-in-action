@@ -1,0 +1,45 @@
+services:
+  postgres:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ostock_dev
+      PGDATA: /data/postgres
+    volumes:
+      - c:/tmp/postgres-ostock:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - ostock-network
+    restart: unless-stopped
+
+
+  configserver:
+    container_name: configserver
+    image: config-server:latest
+    ports:
+      - "8071:8071"
+    networks:
+      - ostock-network
+
+
+  licensing-service:
+    image: licensing-service:1.0
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: "dockerdev"
+      SPRING_CLOUD_CONFIG_URI: http://configserver:8071
+    depends_on:
+      - postgres
+      - configserver
+    networks:
+      - ostock-network
+
+networks:
+  ostock-network:
+
+volumes:
+  postgres:

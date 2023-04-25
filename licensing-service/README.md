@@ -94,3 +94,37 @@ ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
 ```
 
 - docker build -t <name:version> .
+
+
+
+- configuring the license service to use Spring Cloud Config
+  - Usually, the information you store in the **application.yml** is configuration data that you might  want to have available to a service even if the Spring Cloud Config service is unavailable
+```yaml
+spring:
+  application:
+    name: licensing-service  # this name is used bySpring Cloud config Client to know which service is being looked up in the config server
+  
+  profiles:
+    active: dev       # specifies the default profile to run
+    
+  cloud:
+    config:
+      uri: http://localhost:8071  # specifies the location of the Spring Cloud Config server
+
+
+  ## docker dev in config yaml ##
+example:
+  property: I AM DEV
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/ostock_dev
+    username: postgres
+    password: postgres
+
+```
+
+## Configuration used and called from config server
+- http://localhost:8080/actuator/env
+  - this shows the profile, config-server file used with its properties
+  
+

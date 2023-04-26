@@ -18,5 +18,6 @@ spring:
           search-locations: classpath:/config
           # ie /src/main/resources/config  folder
         git:
-          uri: https://github.com/zikozee/spring-microservices-in-action/config.git
+          uri: https://github.com/zikozee/spring-microservices-in-action-config.git
           search-paths: licensingservice
+          skip-ssl-validation: true

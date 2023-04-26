@@ -1,7 +1,0 @@
-example:
-  property: I AM DEV GIT
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/ostock_dev
-    username: postgres
-    password: postgres

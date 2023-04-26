@@ -28,3 +28,12 @@
 - step 2 **mvn clean package**
 - step 3 **java -Djarmode=layertools -jar target/config-server-0.0.1-SNAPSHOT.jar list**
 - docker build -t <name:version> .
+
+## precedence of spring.profiles.active for config server
+- the last profile is the winner
+- ```yaml
+    spring:
+      profiles:
+        active:
+        - native, git   ## git is the winner
+```

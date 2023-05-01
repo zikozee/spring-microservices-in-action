@@ -6,7 +6,9 @@ spring:
     name: config-server
   profiles:
     active:
-    - native, git
+      - native
+      - git
+      - vault
 
   cloud:
     config:
@@ -21,3 +23,16 @@ spring:
           uri: https://github.com/zikozee/spring-microservices-in-action-config.git
           search-paths: licensingservice
           skip-ssl-validation: true
+        vault:
+          kv-version: 2
+          # default
+          port: 8200
+          host: 127.0.0.1
+          authentication: token
+          token: myroot
+          skip-ssl-validation: true
+
+
+logging:
+  level:
+    root: debug

@@ -35,5 +35,20 @@
     spring:
       profiles:
         active:
-        - native, git   ## git is the winner
-```
+        - native, git, vault   ## the last vault is the winner
+  ```
+
+
+## Integrating Vault with Spring Cloud Config Service
+- pull vault image
+- docker run -d -p 8200:8200 --name vault -e 'VAULT_DEV_ROOT_TOKEN_ID=myroot' -e 'VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200' vault
+- access ui http://localhost:8200/ui/vault/auth
+  - token,  value= myroot
+  - Enable new Engine
+  - Select generic KV
+  - Fill out the KV Secrets data
+  - ensure you remember the path name e.g licensing-service
+  - Then create secret after enabling engine and define the required property to encrypt
+  - connect via: 
+    - **curl -XGET http://localhost:8071/licensing-service/default -H "X-Config-Token: myroot**
+    - OR define authentication in property 

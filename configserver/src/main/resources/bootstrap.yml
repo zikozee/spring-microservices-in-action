@@ -8,7 +8,7 @@ spring:
     active:
       - native
       - git
-      - vault
+      #- vault
 
   cloud:
     config:
@@ -32,7 +32,10 @@ spring:
           token: myroot
           skip-ssl-validation: true
 
+## SET HERE or in Environment variable
+#encrypt:
+#  key: IMSYMMETRIC
 
 logging:
   level:
-    root: debug
+    root: info

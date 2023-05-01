@@ -52,3 +52,9 @@
   - connect via: 
     - **curl -XGET http://localhost:8071/licensing-service/default -H "X-Config-Token: myroot**
     - OR define authentication in property 
+
+
+## encrypting properties
+- we can set as property encrypt.key in bootstrap.yml  (12 set of random characters)
+- we can also set in environment variable: **ENCRYPT_KEY=IMSYMMETRIC**
+- by adding this property config server makes available **/encrypt** and **/decrypt** endpoints

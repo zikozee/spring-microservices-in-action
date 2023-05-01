@@ -8,7 +8,7 @@ services:
       POSTGRES_DB: ostock_dev
       PGDATA: /data/postgres
     volumes:
-      - c:/tmp/postgres-ostock:/data/postgres
+      - c:/tmp/postgres_ostock:/data/postgres
     ports:
       - "5432:5432"
     networks:
@@ -21,6 +21,8 @@ services:
     image: config-server:latest
     ports:
       - "8071:8071"
+    environment:
+      ENCRYPT_KEY: "IMSYMMETRIC"
     networks:
       - ostock-network
 
@@ -32,6 +34,7 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: "dockerdev"
       SPRING_CLOUD_CONFIG_URI: http://configserver:8071
+      ENCRYPT_KEY: "IMSYMMETRIC"
     depends_on:
       - postgres
       - configserver

@@ -33,10 +33,22 @@ services:
       - "8080:8080"
     environment:
       SPRING_PROFILES_ACTIVE: "dockerdev"
-      SPRING_CLOUD_CONFIG_URI: http://configserver:8071
+      CONGIG_SERVER_HOST: configserver
       ENCRYPT_KEY: "IMSYMMETRIC"
     depends_on:
       - postgres
+      - configserver
+      - eureka
+    networks:
+      - ostock-network
+
+  eureka:
+    image: eureka:1.0
+    ports:
+      - "8070:8070"
+    environment:
+      CONGIG_SERVER_HOST: configserver
+    depends_on:
       - configserver
     networks:
       - ostock-network

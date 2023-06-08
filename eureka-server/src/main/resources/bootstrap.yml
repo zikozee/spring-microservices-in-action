@@ -4,4 +4,4 @@ spring:
 
   cloud:
     config:
-      uri: http://localhost:8071
+      uri: http://${CONGIG_SERVER_HOST:localhost}:8071

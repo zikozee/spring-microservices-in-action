@@ -1,5 +1,5 @@
 example:
-  property: I AM LICENSE DOCKER DEV
+  property: I AM ORGANIZATION DOCKER DEV
 spring:
   datasource:
     url: jdbc:postgresql://postgres:5432/ostock_dev

@@ -23,6 +23,8 @@ public class LicensingServiceApplication {
         log.info("Password: {}", environment.getProperty("spring.datasource.password"));
         log.info("username: {}", environment.getProperty("spring.datasource.username"));
         log.info("url: {}", environment.getProperty("spring.datasource.url"));
+        log.info("url: {}", environment.getProperty("spring.datasource.url"));
+        log.info("eureka url: {}", environment.getProperty("eureka.instance.client.service-url.default-zone"));
     }
     public static void main(String[] args) {
         SpringApplication.run(LicensingServiceApplication.class, args);

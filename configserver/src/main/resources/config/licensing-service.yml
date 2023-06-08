@@ -1,3 +1,6 @@
+server:
+  port: 8080
+
 example:
   property: I AM THE LICENSE DEFAULT
 spring:
@@ -23,3 +26,16 @@ management:
       exposure:
         include: '*'
     enabled-by-default: true
+
+eureka:
+  instance:
+    # prefer the IP address of the service rather than the server name
+    prefer-ip-address: true
+  client:
+    # register the service with the eureka server
+    register-with-eureka: true
+    # pulls down a copy of the registry there caching it. the client recontacts the eureka service every 30s for update
+    fetch-registry: true
+    # sets the location of the eureka service
+    service-url:
+      default-zone: 'http://${EUREKA_HOST:localhost}:8761/eureka/'

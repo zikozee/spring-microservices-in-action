@@ -18,7 +18,7 @@ services:
 
   configserver:
     container_name: configserver
-    image: config-server:latest
+    image: config-server:1.0
     ports:
       - "8071:8071"
     environment:
@@ -27,15 +27,28 @@ services:
     networks:
       - ostock-network
 
+  eureka:
+    image: eureka:1.0
+    ports:
+      - "8070:8070"
+    environment:
+      CONGIG_SERVER_HOST: configserver
+      EUREKA_HOST: "eureka"
+    depends_on:
+      - configserver
+    networks:
+      - ostock-network
 
-  licensing-service:
-    image: licensing-service:1.0
+
+  license-service:
+    image: license-service:1.0
     ports:
       - "8080:8080"
     environment:
       SPRING_PROFILES_ACTIVE: "dockerdev"
       CONGIG_SERVER_HOST: configserver
       ENCRYPT_KEY: "IMSYMMETRIC"
+      EUREKA_HOST: "eureka"
     depends_on:
       - postgres
       - configserver
@@ -51,21 +64,11 @@ services:
       SPRING_PROFILES_ACTIVE: "dockerdev"
       CONGIG_SERVER_HOST: configserver
       ENCRYPT_KEY: "IMSYMMETRIC"
+      EUREKA_HOST: "eureka"
     depends_on:
       - postgres
       - configserver
       - eureka
-    networks:
-      - ostock-network
-
-  eureka:
-    image: eureka:1.0
-    ports:
-      - "8070:8070"
-    environment:
-      CONGIG_SERVER_HOST: configserver
-    depends_on:
-      - configserver
     networks:
       - ostock-network
 

@@ -3,7 +3,7 @@ server:
 
 eureka:
   instance:
-    hostname: ${EUREKA_INSTANCE_HOSTNAME:localhost}
+    hostname: ${EUREKA_HOST:localhost}
 
   client:
     # Tells config server to not register the eureka service

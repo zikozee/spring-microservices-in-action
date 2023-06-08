@@ -43,6 +43,21 @@ services:
     networks:
       - ostock-network
 
+  organization-service:
+    image: organization-service:1.0
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_PROFILES_ACTIVE: "dockerdev"
+      CONGIG_SERVER_HOST: configserver
+      ENCRYPT_KEY: "IMSYMMETRIC"
+    depends_on:
+      - postgres
+      - configserver
+      - eureka
+    networks:
+      - ostock-network
+
   eureka:
     image: eureka:1.0
     ports:

@@ -1,5 +1,5 @@
 server:
-  port: 8761
+  port: 8070
 
 eureka:
   instance:
@@ -7,11 +7,11 @@ eureka:
 
   client:
     # Tells config server to not register the eureka service
-    register-with-eureka: false
+    registerWithEureka: false
     # do not cache registry information locally
-    fetch-registry: false
-    service-url:
-      default-zone: 'http://${eureka.instance.hostname}:${server.port}/eureka/'
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: 'http://${eureka.instance.hostname}:${server.port}/eureka/'
 
   server:
     # sets the initial time wait before the server takes requests

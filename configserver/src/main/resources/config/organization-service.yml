@@ -30,12 +30,12 @@ management:
 eureka:
   instance:
     # prefer the IP address of the service rather than the server name
-    prefer-ip-address: true
+    preferIpAddress: true
   client:
     # register the service with the eureka server
-    register-with-eureka: true
+    registerWithEureka: true
     # pulls down a copy of the registry
-    fetch-registry: true
+    fetchRegistry: true
     # sets the location of the eureka service
-    service-url:
-      default-zone: 'http://${EUREKA_HOST:localhost}:8761/eureka/'
+    serviceUrl:
+      defaultZone: 'http://${EUREKA_HOST:localhost}:8070/eureka/'

@@ -5,3 +5,26 @@ spring:
   cloud:
     config:
       uri: http://${CONGIG_SERVER_HOST:localhost}:8071
+
+    loadbalancer:
+      ribbon:
+        enabled: false
+
+server:
+  port: 8070
+
+eureka:
+  instance:
+    hostname: ${EUREKA_HOST:localhost}
+
+  client:
+    # Tells config server to not register the eureka service
+    register-with-eureka: false
+    # do not cache registry information locally
+    fetch-registry: false
+    service-url:
+      defaultZone: 'http://${eureka.instance.hostname}:${server.port}/eureka/'
+
+  server:
+    # sets the initial time wait before the server takes requests
+    wait-time-in-ms-when-sync-empty: 5

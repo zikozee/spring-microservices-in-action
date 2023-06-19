@@ -5,10 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.hateoas.RepresentationModel;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * @author: Ezekiel Eromosei
@@ -31,6 +28,15 @@ public class License extends RepresentationModel<License> {
     @Column(name = "license_type", nullable = false)
     private String licenseType;
     private String comment;
+    @Transient
+    private String organizationName;
+    @Transient
+    private String contactName;
+    @Transient
+    private String contactPhone;
+    @Transient
+    private String contactEmail;
+
 
     public License withComment(String comment){
         this.setComment(comment);

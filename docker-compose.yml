@@ -57,9 +57,10 @@ services:
       - eurekaserver
     networks:
       - ostock-network
+    restart: unless-stopped
 
   organization-service:
-    container_name: organization-service-service
+    container_name: organization-service
     image: organization-service:1.0
     ports:
       - "8081:8081"
@@ -74,6 +75,25 @@ services:
       - eurekaserver
     networks:
       - ostock-network
+    restart: unless-stopped
+
+  license-service-2:
+    container_name: license-service-2
+    image: license-service:1.0
+    ports:
+      - "8082:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: "dockerdev"
+      CONGIG_SERVER_HOST: configserver
+      ENCRYPT_KEY: "IMSYMMETRIC"
+      EUREKA_HOST: eurekaserver
+    depends_on:
+      - postgres
+      - configserver
+      - eurekaserver
+    networks:
+      - ostock-network
+    restart: unless-stopped
 
 networks:
   ostock-network:

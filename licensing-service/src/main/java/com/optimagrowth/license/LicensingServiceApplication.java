@@ -2,9 +2,12 @@ package com.optimagrowth.license;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeansException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.env.Environment;
 
 import javax.annotation.PostConstruct;
@@ -13,10 +16,11 @@ import javax.annotation.PostConstruct;
 @RefreshScope
 @RequiredArgsConstructor
 @Slf4j
-public class LicensingServiceApplication {
+public class LicensingServiceApplication implements ApplicationContextAware {
+
+    private static ApplicationContext context;
 
     private final Environment environment;
-
 
     @PostConstruct
     public void logApplicationProperties() {
@@ -32,4 +36,12 @@ public class LicensingServiceApplication {
 
     }
 
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        context = applicationContext;
+    }
+
+    public static ApplicationContext getContext(){
+        return context;
+    }
 }

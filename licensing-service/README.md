@@ -134,3 +134,19 @@ spring:
   - but we can always restart our application with new config as docker makes this simple 
     - (make your app stateless)  12 factor app
 
+
+
+## Spring/Netflix Client Libraries for service lookup
+- Spring Discovery Client
+- Spring Discovery Client-enabled REST template
+- Netflix Feign client
+
+  ###  Spring Discovery Client
+  - Note this comes with several issues
+    - you aren't taking advantage of the Spring cloud client-side Load Balancer **(instances.get(0))**
+    - you are doing too much work (writing extra code)
+    - you need to instantiate RestTemplate directly else using the autowired way will change how URI are constructed
+      - and this is antithetical in spring
+  - this offers the lowest level of access to the Load Balancer and the services registered within it
+  - we need use the annotation:  **@EnableDiscoveryClient**
+  - we retrieve all instance of the service we are looking for using the service key (i.e the spring.application.name)

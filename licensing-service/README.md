@@ -157,3 +157,9 @@ spring:
     - we use the Spring.application.name (applicationId) as server name
     - i.e http://{applicationId}/v1/organization/organizationId
   - this applicationId is used as key to query the load balancer in round-robin manner to fetch the service instance
+
+  ### Netflix Feign client
+  - usage :: we need use annotation **@EnableFeignClients**
+  - we create an interface with  annotation **@FeignClient("application-id")**
+  - we use signatures just exactly how we would create Controller class
+  

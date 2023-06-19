@@ -18,18 +18,15 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class OrganizationDiscoveryClient {
+public class OrganizationRestTemplateClient {
 
-    private final DiscoveryClient discoveryClient;  // enabled by bringing in @EnableDiscoveryClient
+    private final RestTemplate restTemplate;
 
     public Organization getOrganization(String organizationId){
-        RestTemplate restTemplate = new RestTemplate();
-        List<ServiceInstance> instances = discoveryClient.getInstances("organization-service");
 
-        if(instances.isEmpty()) return null;
-        String serviceUri = instances.get(0).getUri().toString() + "/v1/organization/" + organizationId;
-
-        ResponseEntity<Organization> restExchange = restTemplate.exchange(serviceUri, HttpMethod.GET, null, Organization.class, organizationId);
+        ResponseEntity<Organization> restExchange = restTemplate
+                .exchange("http://organization-service/v1/organization/{organizationId}", HttpMethod.GET,
+                        null, Organization.class, organizationId);
         return restExchange.getBody();
     }
 }

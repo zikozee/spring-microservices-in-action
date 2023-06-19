@@ -138,7 +138,7 @@ spring:
 
 ## Spring/Netflix Client Libraries for service lookup
 - Spring Discovery Client
-- Spring Discovery Client-enabled REST template
+- Spring Discovery Client-enabled  Load Balancer-aware REST template
 - Netflix Feign client
 
   ###  Spring Discovery Client
@@ -150,3 +150,10 @@ spring:
   - this offers the lowest level of access to the Load Balancer and the services registered within it
   - we need use the annotation:  **@EnableDiscoveryClient**
   - we retrieve all instance of the service we are looking for using the service key (i.e the spring.application.name)
+
+  ###  Spring Discovery Client-enabled  Load Balancer-aware REST template
+  - usage  :: define a **RestTemplate Bean** with a Spring Cloud **@LoadBalanced** annotation
+  - the major difference in the way the RestTemplate is constructed  with the Spring Discovery client is that 
+    - we use the Spring.application.name (applicationId) as server name
+    - i.e http://{applicationId}/v1/organization/organizationId
+  - this applicationId is used as key to query the load balancer in round-robin manner to fetch the service instance

@@ -1,6 +1,7 @@
 package com.optimagrowth.license.config.client;
 
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * @author: Ezekiel Eromosei
@@ -8,5 +9,6 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  */
 
 @EnableDiscoveryClient
+@Configuration
 public class DiscoveryClientConfig {
 }

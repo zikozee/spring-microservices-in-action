@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 public class LoadBalancedRestTemplateConfig {
 
     @LoadBalanced // gets a list of all the organization instances
-    @Bean
+    @Bean(name = "loadBalancedTemplate")
     public RestTemplate restTemplate(){
         return new RestTemplate();
     }

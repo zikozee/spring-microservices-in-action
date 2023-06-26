@@ -7,10 +7,13 @@ import com.optimagrowth.license.repository.LicenseRepository;
 import com.optimagrowth.license.service.client.OrganizationDiscoveryClient;
 import com.optimagrowth.license.service.client.OrganizationFeignClient;
 import com.optimagrowth.license.service.client.OrganizationRestTemplateClient;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.UUID;
@@ -20,6 +23,7 @@ import java.util.UUID;
  * @created: 28 March 2023
  */
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LicenseService {
@@ -102,5 +106,26 @@ public class LicenseService {
         }
 
         return organization;
+    }
+
+    @CircuitBreaker(name = "licenseService")
+    public List<License> getLicensesByOrganization(String organizationId) {
+        randomRunLong();
+        return licenseRepository.findAllByOrganizationId(organizationId);
+    }
+
+
+    private void randomRunLong(){
+        Random rand = new Random();
+        int random = rand.nextInt(3) + 1;
+        if(random == 3) sleep();
+    }
+
+    private void sleep(){
+        try {
+            Thread.sleep(5000);
+        }catch (InterruptedException ex){
+            log.error(ex.getMessage());
+        }
     }
 }

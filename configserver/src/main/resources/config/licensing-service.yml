@@ -91,7 +91,7 @@ resilience4j:
           units:
             - 10ms
         # max concurrent calls (default 25)
-        max-concurrent-calls: 5
+        max-concurrent-calls: 2
 
   thread-pool-bulkhead:
     instances:

@@ -109,9 +109,9 @@ public class LicenseService {
         return organization;
     }
 
-    @CircuitBreaker(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
+//    @CircuitBreaker(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
 //    @Bulkhead(name = "bulkheadLicenseService", fallbackMethod = "buildFallbackLicenseList", type = Bulkhead.Type.THREADPOOL)// this uses the thread pool config
-    @Bulkhead(name = "bulkheadLicenseService", fallbackMethod = "buildFallbackLicenseList")// this uses the semaphore/default config
+    @Bulkhead(name = "bulkheadLicenseService"/*, fallbackMethod = "buildFallbackLicenseList"*/)// this uses the semaphore/default config
     public List<License> getLicensesByOrganization(String organizationId) throws TimeoutException {
         randomRunLong();
         return licenseRepository.findAllByOrganizationId(organizationId);
@@ -132,17 +132,17 @@ public class LicenseService {
     }
 
 
-    private void randomRunLong() throws TimeoutException {
+    private void randomRunLong() /*throws TimeoutException */{
         Random rand = new Random();
         int random = rand.nextInt(3) + 1;
         System.out.println("random: " + random);
         if(random == 3) sleep();
     }
 
-    private static void sleep() throws TimeoutException {
+    private static void sleep() /*throws TimeoutException*/ {
         try {
             Thread.sleep(5000);
-            throw new TimeoutException("timeout occurred");
+//            throw new TimeoutException("timeout occurred");
         }catch (InterruptedException ex){
             log.error(ex.getMessage());
         }

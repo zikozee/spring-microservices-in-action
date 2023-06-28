@@ -13,7 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeoutException;
 
 /**
  * @author: Ezekiel Eromosei
@@ -105,22 +107,44 @@ public class LicenseService {
         return organization;
     }
 
-    @CircuitBreaker(name = "licenseService")
-    public List<License> getLicensesByOrganization(String organizationId) {
+    @CircuitBreaker(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
+    public List<License> getLicensesByOrganization(String organizationId) throws TimeoutException {
         randomRunLong();
         return licenseRepository.findAllByOrganizationId(organizationId);
     }
 
+    @CircuitBreaker(name = "licenseAlternateService", fallbackMethod = "buildFallbackAlternateLicenseList")
+    private List<License> buildFallbackLicenseList(String organizationId, Throwable t) throws IOException {
+        //Assuming this too can fail, this also should be wrapped with a circuit breaker: Code defensively
+        System.out.println("In fallback method 1");
+        License license = new License();
+        license.setLicenseId("0000000-00-00000");
+        license.setOrganizationId(organizationId);
+        license.setProductName("Sorry no licensing information currently available");
+        int random = new Random().nextInt(3) + 1;
+        System.out.println("random: " + random);
+        if(random == 3) throw new IOException();
 
-    private void randomRunLong(){
+        return List.of(license);
+    }
+
+    private List<License> buildFallbackAlternateLicenseList(String organizationId, Throwable t){
+        System.out.println("In fallback method 1");
+        return List.of();
+    }
+
+
+    private void randomRunLong() throws TimeoutException {
         Random rand = new Random();
         int random = rand.nextInt(3) + 1;
+        System.out.println("random: " + random);
         if(random == 3) sleep();
     }
 
-    private void sleep(){
+    private void sleep() throws TimeoutException {
         try {
-            Thread.sleep(20000);
+            Thread.sleep(5000);
+            throw new TimeoutException("timeout occurred");
         }catch (InterruptedException ex){
             log.error(ex.getMessage());
         }

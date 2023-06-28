@@ -69,6 +69,10 @@ resilience4j:
           - java.util.concurrent.TimeoutException
           - org.springframework.web.client.ResourceAccessException
 
+      licenseAlternateService:
+        record-exceptions:
+          - java.io.IOException
+
       organizationService:
         register-health-indicator: true
         ring-buffer-size-in-closed-state: 15

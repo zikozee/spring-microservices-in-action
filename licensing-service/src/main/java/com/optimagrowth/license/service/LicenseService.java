@@ -7,6 +7,7 @@ import com.optimagrowth.license.repository.LicenseRepository;
 import com.optimagrowth.license.service.client.OrganizationDiscoveryClient;
 import com.optimagrowth.license.service.client.OrganizationFeignClient;
 import com.optimagrowth.license.service.client.OrganizationRestTemplateClient;
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -109,12 +110,14 @@ public class LicenseService {
     }
 
     @CircuitBreaker(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
+//    @Bulkhead(name = "bulkheadLicenseService", fallbackMethod = "buildFallbackLicenseList", type = Bulkhead.Type.THREADPOOL)// this uses the thread pool config
+    @Bulkhead(name = "bulkheadLicenseService", fallbackMethod = "buildFallbackLicenseList")// this uses the semaphore/default config
     public List<License> getLicensesByOrganization(String organizationId) throws TimeoutException {
         randomRunLong();
         return licenseRepository.findAllByOrganizationId(organizationId);
     }
 
-    public List<License> buildFallbackLicenseList(String organizationId, Throwable t) throws TimeoutException {
+    public List<License> buildFallbackLicenseList(String organizationId, Throwable t) throws IOException {
         //Assuming this too can fail, this also should be wrapped with a circuit breaker: Code defensively
         System.out.println("In fallback method 1");
         License license = new License();
@@ -136,7 +139,7 @@ public class LicenseService {
         if(random == 3) sleep();
     }
 
-    public static void sleep() throws TimeoutException {
+    private static void sleep() throws TimeoutException {
         try {
             Thread.sleep(5000);
             throw new TimeoutException("timeout occurred");

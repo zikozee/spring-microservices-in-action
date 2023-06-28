@@ -81,3 +81,28 @@ resilience4j:
           units:
             - 20s
         failure-rate-threshold: 9
+
+
+  bulkhead:
+    instances:
+      bulkheadLicenseService:
+        # max amount time to block a thread (default 0)
+        max-wait-duration:
+          units:
+            - 10ms
+        # max concurrent calls (default 25)
+        max-concurrent-calls: 5
+
+  thread-pool-bulkhead:
+    instances:
+      bulkheadLicenseService:
+        #(default Runtime.getRuntime().availableProcessors())
+        max-thread-pool-size: 1
+        #(default Runtime.getRuntime().availableProcessors())
+        core-thread-pool-size: 1
+        #(default 100)
+        queue-capacity: 1
+        #(max time that idle thread will wait for new tasks before terminating. default 20ms)
+        keep-alive-duration:
+          units:
+            - 20ms

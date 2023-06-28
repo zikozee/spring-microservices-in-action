@@ -8,39 +8,21 @@ spring:
     config:
       uri: http://${CONGIG_SERVER_HOST:localhost}:8071
 
-#resilience4j:
-#  circuitbreaker:
-#    instances:
-#      licenseService:
-#        ## indicate whether to expose the configuration over the health endpoint
-#        register-health-indicator: true
-#        ## sets the ring buffer size at closed state: used to evaluate total call to be evaluated in closed state (default: 100)
-#        ## circuit breaker only opens if the failure rate within this ring buffer > than the failure-rate-threshold
-#        ring-buffer-size-in-closed-state: 10
-#        ## sets the ring buffer size at half-open state: used to evaluate total call to be evaluated in half-open state (default: 10)
-#        ## if the failure rate within the ring buffer is <= to the failure-rate-threshold, its switched to closed else switches to back to open
-#        ring-buffer-size-in-half-open-state: 3
-#        ## sets the time the circuit breaker should wait before changing the status from open to half-open (default 60s)
-#        wait-duration-in-open-state:
-#          units:
-#            - 20s
-#        ## the percentage of the failure rate threshold
-#        ## when the failure rate in the ring buffer in closed state is >= this threshold, the circuit breaker changes to
-#        ## open state and starts short-circuiting calls  (default: 50)
-#        failure-rate-threshold: 7
-#        # by default all exceptions are seen as failures,
-#        # however, we can configure the list of exceptions to see as failures
-#        record-exceptions:
-#          - org.springframework.web.client.HttpServerErrorException
-#          - java.io.IOException
-#          - java.util.concurrent.TimeoutException
-#          - org.springframework.web.client.ResourceAccessException
-#
-#      organizationService:
-#        register-health-indicator: true
-#        ring-buffer-size-in-closed-state: 15
-#        ring-buffer-size-in-half-open-state: 4
-#        wait-duration-in-open-state:
-#          units:
-#            - 20s
-#        failure-rate-threshold: 9
+resilience4j:
+  bulkhead:
+    instances:
+      bulkheadLicenseService:
+        max-wait-duration:
+          units:
+            - 10ms
+        max-concurrent-calls: 20
+
+  thread-pool-bulkhead:
+    instances:
+      bulkheadLicenseService:
+        max-thread-pool-size: 1
+        core-thread-pool-size: 1
+        queue-capacity: 1
+        keep-alive-duration:
+          units:
+            - 20ms

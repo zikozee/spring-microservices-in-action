@@ -163,3 +163,8 @@ spring:
   - we create an interface with  annotation **@FeignClient("application-id")**
   - we use signatures just exactly how we would create Controller class
   
+## Bulk Head Patten
+- we definitely expose several endpoints to our customers
+- however, we notice a call to a particular endpoint keeps timing out or starving resources
+- we can limit the number of calls to this particular endpoint using bulkhead
+- types of bulkhead -> semaphore (setting max concurrent calls) or Thread pool bulkhead (using a thread pool)

@@ -114,22 +114,22 @@ public class LicenseService {
     }
 
     @CircuitBreaker(name = "licenseAlternateService", fallbackMethod = "buildFallbackAlternateLicenseList")
-    private List<License> buildFallbackLicenseList(String organizationId, Throwable t) throws IOException {
+    public List<License> buildFallbackLicenseList(String organizationId, Throwable t) throws TimeoutException {
         //Assuming this too can fail, this also should be wrapped with a circuit breaker: Code defensively
         System.out.println("In fallback method 1");
         License license = new License();
         license.setLicenseId("0000000-00-00000");
         license.setOrganizationId(organizationId);
         license.setProductName("Sorry no licensing information currently available");
-        int random = new Random().nextInt(3) + 1;
+        int random = new Random().nextInt(2) + 1;
         System.out.println("random: " + random);
-        if(random == 3) throw new IOException();
+        if(random == 2) sleep();
 
         return List.of(license);
     }
 
     private List<License> buildFallbackAlternateLicenseList(String organizationId, Throwable t){
-        System.out.println("In fallback method 1");
+        System.out.println("In fallback method 2");
         return List.of();
     }
 

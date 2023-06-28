@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Locale;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -88,5 +89,10 @@ public class LicenseController {
                                                 @PathVariable("licenseId") String licenseId,
                                                 @PathVariable("clientType") String clientType) {
         return ResponseEntity.ok(licenseService.getLicense(organizationId, licenseId, clientType));
+    }
+
+    @GetMapping
+    public List<License> getLicenses(@PathVariable("organizationId") String organizationId) {
+        return licenseService.getLicensesByOrganization(organizationId);
     }
 }

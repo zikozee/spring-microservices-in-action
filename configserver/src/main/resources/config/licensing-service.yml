@@ -71,7 +71,7 @@ resilience4j:
 
       licenseAlternateService:
         record-exceptions:
-          - java.util.concurrent.TimeoutException
+          - java.io.IOException
 
       organizationService:
         register-health-indicator: true

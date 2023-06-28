@@ -33,6 +33,7 @@ public class LicenseService {
     private final OrganizationDiscoveryClient organizationDiscoveryClient;
     private final OrganizationRestTemplateClient organizationRestTemplateClient;
     private final OrganizationFeignClient organizationFeignClient;
+    private final LicenseServiceHelper licenseServiceHelper;
 
     public License getLicense(String licenseId, String organizationId){
         License license = licenseRepository
@@ -113,7 +114,6 @@ public class LicenseService {
         return licenseRepository.findAllByOrganizationId(organizationId);
     }
 
-    @CircuitBreaker(name = "licenseAlternateService", fallbackMethod = "buildFallbackAlternateLicenseList")
     public List<License> buildFallbackLicenseList(String organizationId, Throwable t) throws TimeoutException {
         //Assuming this too can fail, this also should be wrapped with a circuit breaker: Code defensively
         System.out.println("In fallback method 1");
@@ -123,14 +123,9 @@ public class LicenseService {
         license.setProductName("Sorry no licensing information currently available");
         int random = new Random().nextInt(2) + 1;
         System.out.println("random: " + random);
-        if(random == 2) sleep();
+        if(random == 2) return licenseServiceHelper.dummyService(organizationId);
 
         return List.of(license);
-    }
-
-    private List<License> buildFallbackAlternateLicenseList(String organizationId, Throwable t){
-        System.out.println("In fallback method 2");
-        return List.of();
     }
 
 
@@ -141,7 +136,7 @@ public class LicenseService {
         if(random == 3) sleep();
     }
 
-    private void sleep() throws TimeoutException {
+    public static void sleep() throws TimeoutException {
         try {
             Thread.sleep(5000);
             throw new TimeoutException("timeout occurred");

@@ -168,3 +168,9 @@ spring:
 - however, we notice a call to a particular endpoint keeps timing out or starving resources
 - we can limit the number of calls to this particular endpoint using bulkhead
 - types of bulkhead -> semaphore (setting max concurrent calls) or Thread pool bulkhead (using a thread pool)
+
+## Retry
+- use max-attempts, wait-duration in conjunction with exponontial-backoff
+- result predicate help retry on certain result
+- retry-exception-predicate should be should if we expect a certain exception message or action, rather than the general exception (i.e check particular message rather than the entire Exception see CustomRetryException usage)  ELSE just use the retry-exception
+- for retry-Exception, ignore-Exception, result-predicate and retry-exception-predicate use the full classpath

@@ -4,11 +4,13 @@ import com.optimagrowth.license.config.ServiceConfig;
 import com.optimagrowth.license.model.License;
 import com.optimagrowth.license.model.Organization;
 import com.optimagrowth.license.repository.LicenseRepository;
+import com.optimagrowth.license.resilience.CustomRetryException;
 import com.optimagrowth.license.service.client.OrganizationDiscoveryClient;
 import com.optimagrowth.license.service.client.OrganizationFeignClient;
 import com.optimagrowth.license.service.client.OrganizationRestTemplateClient;
 import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
@@ -35,6 +37,8 @@ public class LicenseService {
     private final OrganizationRestTemplateClient organizationRestTemplateClient;
     private final OrganizationFeignClient organizationFeignClient;
     private final LicenseServiceHelper licenseServiceHelper;
+
+    private int counter;
 
     public License getLicense(String licenseId, String organizationId){
         License license = licenseRepository
@@ -111,9 +115,20 @@ public class LicenseService {
 
 //    @CircuitBreaker(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
 //    @Bulkhead(name = "bulkheadLicenseService", fallbackMethod = "buildFallbackLicenseList", type = Bulkhead.Type.THREADPOOL)// this uses the thread pool config
-    @Bulkhead(name = "bulkheadLicenseService"/*, fallbackMethod = "buildFallbackLicenseList"*/)// this uses the semaphore/default config
+//    @Bulkhead(name = "bulkheadLicenseService", fallbackMethod = "buildFallbackLicenseList")// this uses the semaphore/default config
+    @Retry(name = "retryLicenseService")
     public List<License> getLicensesByOrganization(String organizationId) throws TimeoutException {
-        randomRunLong();
+        Random rand = new Random();
+        int random = rand.nextInt(4) + 1;
+        System.out.println("random: " + random);
+        if(random == 1) {
+            License license = new License();
+            license.setOrganizationId("BOOMSHAKASHAKA");
+            return List.of(license);
+        }
+
+        randomRunLong(random);
+
         return licenseRepository.findAllByOrganizationId(organizationId);
     }
 
@@ -132,17 +147,16 @@ public class LicenseService {
     }
 
 
-    private void randomRunLong() /*throws TimeoutException */{
-        Random rand = new Random();
-        int random = rand.nextInt(3) + 1;
-        System.out.println("random: " + random);
-        if(random == 3) sleep();
+    private void randomRunLong(int random) throws TimeoutException {
+        System.out.println("retry: " + counter++);
+        if(random == 3) throw new CustomRetryException("a custom exception thrown");
+        if(random == 4) sleep();
     }
 
-    private static void sleep() /*throws TimeoutException*/ {
+    private static void sleep() throws TimeoutException {
         try {
-            Thread.sleep(5000);
-//            throw new TimeoutException("timeout occurred");
+            Thread.sleep(3000);
+            throw new TimeoutException("timeout occurred");
         }catch (InterruptedException ex){
             log.error(ex.getMessage());
         }

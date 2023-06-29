@@ -106,3 +106,35 @@ resilience4j:
         keep-alive-duration:
           units:
             - 20ms
+
+  retry:
+    instances:
+      retryLicenseService:
+        # maximum retry attempts
+        max-attempts: 5
+        # wait time before next retry (default 500ms)
+        wait-duration:
+          units:
+            - 5s
+        # exceptions to retry for (default empty i.e all exceptions)
+        retry-exceptions:
+          - java.util.concurrent.TimeoutException
+        # list of exceptions not to retry for (default empty)
+        ignore-exceptions:
+          - java.lang.NullPointerException
+        # prevent starving/ choking service to retry for to allow breathing room
+        ## use exponential back as alternative to wait-duration
+        enable-exponential-backoff: true
+        # exponential multiplier a=(20 *1.2),   (a * 1.2) ...  (z *1.2)
+        exponential-backoff-multiplier: 1.2
+        # max exponential wait duration, i.e X.12  <= 10
+        exponential-max-wait-duration:
+          units:
+            - 10s
+        # retry if result meet condition
+        result-predicate: com.optimagrowth.license.resilience.ConditionalRetryResultPredicate
+        # this exception used here must be excluded from the retry-exceptions
+        retry-exception-predicate: com.optimagrowth.license.resilience.ConditionalRetryExceptionPredicate
+        # If you don't want to use a fixed wait duration between retry attempts,
+        # you can configure an IntervalFunction which is used instead to calculate the wait duration for every attempt
+        #interval-bi-function:

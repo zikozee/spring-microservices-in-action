@@ -7,14 +7,7 @@ spring:
   cloud:
     config:
       uri: http://${CONGIG_SERVER_HOST:localhost}:8071
-
-resilience4j:
-  ratelimiter:
-    instances:
-      licenceService:
-        # time a thread waits for permission (call to be allowed)  default 5s
-        timeout-duration: 100s
-        # time of refresh period default 500ns
-        limit-refresh-period: 5000ns
-        # number of calls allowed for a period. default 50
-        limit-for-period: 2
+logging:
+  level:
+    org.springframework.web: WARN
+    com.optimagrowth: DEBUG

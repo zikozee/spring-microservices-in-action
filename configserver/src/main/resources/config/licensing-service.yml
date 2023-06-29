@@ -113,9 +113,7 @@ resilience4j:
         # maximum retry attempts
         max-attempts: 5
         # wait time before next retry (default 500ms)
-        wait-duration:
-          units:
-            - 5s
+        wait-duration: 3s
         # exceptions to retry for (default empty i.e all exceptions)
         retry-exceptions:
           - java.util.concurrent.TimeoutException
@@ -128,9 +126,7 @@ resilience4j:
         # exponential multiplier a=(20 *1.2),   (a * 1.2) ...  (z *1.2)
         exponential-backoff-multiplier: 1.2
         # max exponential wait duration, i.e X.12  <= 10
-        exponential-max-wait-duration:
-          units:
-            - 10s
+        exponential-max-wait-duration: 10s
         # retry if result meet condition
         result-predicate: com.optimagrowth.license.resilience.ConditionalRetryResultPredicate
         # this exception used here must be excluded from the retry-exceptions

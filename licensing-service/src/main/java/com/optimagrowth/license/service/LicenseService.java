@@ -17,6 +17,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeoutException;
 
@@ -118,6 +119,7 @@ public class LicenseService {
 //    @Bulkhead(name = "bulkheadLicenseService", fallbackMethod = "buildFallbackLicenseList")// this uses the semaphore/default config
     @Retry(name = "retryLicenseService")
     public List<License> getLicensesByOrganization(String organizationId) throws TimeoutException {
+        System.out.println("current retry time: " + LocalDateTime.now());
         Random rand = new Random();
         int random = rand.nextInt(4) + 1;
         System.out.println("random: " + random);

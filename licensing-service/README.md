@@ -163,7 +163,7 @@ spring:
   - we create an interface with  annotation **@FeignClient("application-id")**
   - we use signatures just exactly how we would create Controller class
   
-## Bulk Head Patten
+## Bulk Head Patten - allow X number of CONCURRENT calls at a time
 - we definitely expose several endpoints to our customers
 - however, we notice a call to a particular endpoint keeps timing out or starving resources
 - we can limit the number of calls to this particular endpoint using bulkhead
@@ -174,3 +174,6 @@ spring:
 - result predicate help retry on certain result
 - retry-exception-predicate should be should if we expect a certain exception message or action, rather than the general exception (i.e check particular message rather than the entire Exception see CustomRetryException usage)  ELSE just use the retry-exception
 - for retry-Exception, ignore-Exception, result-predicate and retry-exception-predicate use the full classpath
+
+## Rate Limiter -> allow X  number of calls every Y second 
+- in cloud up-to-date - architectures, its a good option to include auto-scaling

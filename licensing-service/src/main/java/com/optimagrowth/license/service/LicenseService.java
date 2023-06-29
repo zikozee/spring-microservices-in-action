@@ -10,6 +10,7 @@ import com.optimagrowth.license.service.client.OrganizationFeignClient;
 import com.optimagrowth.license.service.client.OrganizationRestTemplateClient;
 import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -117,19 +118,20 @@ public class LicenseService {
 //    @CircuitBreaker(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
 //    @Bulkhead(name = "bulkheadLicenseService", fallbackMethod = "buildFallbackLicenseList", type = Bulkhead.Type.THREADPOOL)// this uses the thread pool config
 //    @Bulkhead(name = "bulkheadLicenseService", fallbackMethod = "buildFallbackLicenseList")// this uses the semaphore/default config
-    @Retry(name = "retryLicenseService")
+//    @Retry(name = "retryLicenseService")
+    @RateLimiter(name = "licenseService")
     public List<License> getLicensesByOrganization(String organizationId) throws TimeoutException {
-        System.out.println("current retry time: " + LocalDateTime.now());
-        Random rand = new Random();
-        int random = rand.nextInt(4) + 1;
-        System.out.println("random: " + random);
-        if(random == 1) {
-            License license = new License();
-            license.setOrganizationId("BOOMSHAKASHAKA");
-            return List.of(license);
-        }
-
-        randomRunLong(random);
+//        System.out.println("current retry time: " + LocalDateTime.now());
+//        Random rand = new Random();
+//        int random = rand.nextInt(4) + 1;
+//        System.out.println("random: " + random);
+//        if(random == 1) {
+//            License license = new License();
+//            license.setOrganizationId("BOOMSHAKASHAKA");
+//            return List.of(license);
+//        }
+//
+//        randomRunLong(random);
 
         return licenseRepository.findAllByOrganizationId(organizationId);
     }

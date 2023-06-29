@@ -134,3 +134,13 @@ resilience4j:
         # If you don't want to use a fixed wait duration between retry attempts,
         # you can configure an IntervalFunction which is used instead to calculate the wait duration for every attempt
         #interval-bi-function:
+
+  ratelimiter:
+    instances:
+      licenceService:
+        # time a thread waits for permission (call to be allowed)  default 5s
+        timeout-duration: 100s
+        # time of refresh period default 500ns
+        limit-refresh-period: 5000ns
+        # number of calls allowed for a period. default 50
+        limit-for-period: 2

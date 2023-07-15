@@ -1,0 +1,23 @@
+server:
+  port: 8072
+eureka:
+  instance:
+    # prefer the IP address of the service rather than the server name
+    preferIpAddress: true
+  client:
+    # register the service with the eureka server
+    registerWithEureka: true
+    # pulls down a copy of the registry
+    fetchRegistry: true
+    # sets the location of the eureka service
+    serviceUrl:
+      defaultZone: 'http://${EUREKA_HOST:localhost}:8070/eureka/'
+
+# automated mapping of routes via service discovery
+spring:
+  cloud:
+    gateway:
+      # Enables the gateway to create routes based on services registered with service discovery
+      discovery.locator:
+        enabled: true
+        lowerCaseServiceId: true

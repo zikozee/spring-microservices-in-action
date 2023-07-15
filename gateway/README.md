@@ -6,14 +6,28 @@
 - Automated mapping of routes using service discovery
 - Manual mapping of routes using service discovery
 
-# Automated mapping of routes via service discovery
+# mapping of routes via service discovery
+- note if discovery service is available and the services are registered both automatic and manual routes will be shown 
 - ```yaml
   spring:
     cloud:
       gateway:
+        # Automatic routing
         discovery.locator:
           enabled: true
           lowerCaseServiceId: true
+        # manual routing
+        routes:
+          - id: organization-service
+          - uri: lb://organization-service
+
+            predicates:
+              - Path=/organization/**
+
+            filters:
+              #- StripPrefix=2   # to strip say the first api/v1  say we had api/v1/organization-service but the service has no api/v1
+              # Rewrites the request path from /organization/** to /**
+              - RewritePath=/organization/(?<path>.*), /$\{path}
   ```
 - then we call call organization service as this:
   - http://<GATEWAY_IP>:<GATEWAY_PORT>/<EUREKA_SERVICE_ID_FOR_ORGANIZATION>/<OTHER_URI>

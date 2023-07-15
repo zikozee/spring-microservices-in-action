@@ -8,6 +8,7 @@
 
 # mapping of routes via service discovery
 - note if discovery service is available and the services are registered both automatic and manual routes will be shown 
+- remove **discovery.locator**, then you will have the **_manual_** alone
 - ```yaml
   spring:
     cloud:
@@ -29,9 +30,15 @@
               # Rewrites the request path from /organization/** to /**
               - RewritePath=/organization/(?<path>.*), /$\{path}
   ```
-- then we call call organization service as this:
-  - http://<GATEWAY_IP>:<GATEWAY_PORT>/<EUREKA_SERVICE_ID_FOR_ORGANIZATION>/<OTHER_URI>
-  - http://localhost:8072/organization-service/v1/organization
+- AUTOMATIC SERVICE CALL
+  - then we call call organization service as this:
+      - http://<GATEWAY_IP>:<GATEWAY_PORT>/<EUREKA_SERVICE_ID_FOR_ORGANIZATION>/<OTHER_URI>
+      - http://localhost:8072/organization-service/v1/organization
+
+- MANUAL SERVICE CALL
+  - http://localhost:8072/organization/v1/organization
+
+
 
 # List routes managed by Gateway server
 - actuator/gateway/routes

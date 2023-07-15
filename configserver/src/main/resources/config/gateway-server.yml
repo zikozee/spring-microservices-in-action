@@ -25,7 +25,7 @@ spring:
       # manual mapping of routes via service discovery
       routes:
         - id: organization-service
-        - uri: lb://organization-service
+          uri: lb://organization-service
 
           predicates:
             - Path=/organization/**

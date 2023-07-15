@@ -1,8 +1,6 @@
 spring:
   application:
     name: gateway-server
-  profiles:
-    active: dev
   cloud:
     config:
       uri: http://${CONGIG_SERVER_HOST:localhost}:8071

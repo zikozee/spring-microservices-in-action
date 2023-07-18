@@ -62,3 +62,18 @@
   - we can modify incom  ing and outgoing HTTP requests and responses
 - Building predicates which are objects that allow us to check if the requests fulfill a set of given conditions
   - before executing or processing a request
+
+# Dynamically reloading route configuration
+- to do this on the fly, all that is required is to add new route on the **gateway** config files on **Spring Cloud Config**
+  - push back to git and call **_actuator/gateway/refresh_**
+  - on calling **_actuator/gateway/routes_** again, we see its updated
+
+
+# Custom Filters
+- **_Prefilters_** and **_Post-filters_**
+- Pre-filters -> after receiving request from client, prefilter does its work,
+  - forwards to the gateway handler that routes to the appropriate destination
+    - before sending to target destination,
+    - we could log, authenticate etc, check headers etc
+- Post-filters -> after receiving response from target does its work before sending back to client
+  - handle errors, audit response for sensitive info 

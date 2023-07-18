@@ -88,11 +88,11 @@ public class LicenseController {
         return ResponseEntity.ok(licenseService.deleteLicense(licenseId));
     }
 
-    @DeleteMapping(value="/{licenseId}/{clientType}")
+    @GetMapping(value="/{licenseId}/{clientType}")
     public ResponseEntity<License> getLicensesWithClient(@PathVariable("organizationId") String organizationId,
                                                 @PathVariable("licenseId") String licenseId,
                                                 @PathVariable("clientType") String clientType) {
-        return ResponseEntity.ok(licenseService.getLicense(organizationId, licenseId, clientType));
+        return ResponseEntity.ok(licenseService.getLicense(licenseId, organizationId, clientType));
     }
 
     @GetMapping

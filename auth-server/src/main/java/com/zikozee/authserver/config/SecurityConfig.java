@@ -18,6 +18,7 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
+import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
@@ -78,7 +79,10 @@ public class SecurityConfig {
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
                 .redirectUri("https://springone.io/authorized")
-                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC) // this means you have to authenticate as basic auth as client_id and secret
+//                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC) // this means you have to authenticate as basic auth as client_id and secret
+                .clientAuthenticationMethods(authMethods -> {
+                    authMethods.add(ClientAuthenticationMethod.CLIENT_SECRET_BASIC);
+                }) // this means you have to authenticate as basic auth as client_id and secret
 //                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
 //                .authorizationGrantType(AuthorizationGrantType.PASSWORD)
 //                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
@@ -94,7 +98,26 @@ public class SecurityConfig {
 //                        .build())
                 .build();
 
-        return new InMemoryRegisteredClientRepository(r1);
+        RegisteredClient r2 = RegisteredClient.withId(UUID.randomUUID().toString())
+                .clientId("clienty")
+                .clientSecret("secrety")
+                .scope(OidcScopes.OPENID)
+                .scope(OidcScopes.PROFILE)
+                .redirectUri("https://springone.io/authorized")
+
+                .clientAuthenticationMethods(authMethods -> {
+                    authMethods.add(ClientAuthenticationMethod.NONE);
+                }) // this means you have to authenticate as basic auth as client_id and secret
+
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+//                .clientSettings(ClientSettings.builder()
+//                        .requireAuthorizationConsent(false) // authorization code, device code
+//                        .requireProofKey(true)// pkce
+//                        .build())
+                .build();
+
+        return new InMemoryRegisteredClientRepository(r1, r2);
     }
 
     @Bean

@@ -12,7 +12,8 @@
  // see test intro to j5
   -  generate codeVerifier  _this was hashed to become the challenge_
   -  generate code challenge
-  -  call method http://localhost:8080/oauth2/authorize?response_type=code&client_id=client&scope=openid&redirect_uri=https://springone.io/authorized&code_challenge=<CODE_CHALLENGE>&code_challenge_method=S256
+  - ensure you update the client_id
+  -  call method http://localhost:8080/oauth2/authorize?response_type=code&client_id=clienty&scope=openid&redirect_uri=https://springone.io/authorized&code_challenge=<CODE_CHALLENGE>&code_challenge_method=S256
 - send post request to the below url
   - http://localhost:8080/oauth2/token?grant_type=authorization_code&code=<CODE>&redirect_uri=https://springone.io/authorized&client_id=client&code_verifier
   - Params: client id, grant_type, redirect uri, code gotten, code verifier 
@@ -20,3 +21,7 @@
 
 ## get public key for resource server to use
 - http://localhost:8080/oauth2/jwks
+
+## Registered Client Repository using Jpa and JdBcTemplate
+- Jpa: https://gist.github.com/sjohnr/0c6065d90d11a0f24bd3f15cbbaa8527
+- JdbcTemplate: https://huongdanjava.com/store-registeredclient-to-database-in-spring-authorization-server.html

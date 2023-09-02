@@ -45,4 +45,12 @@
 - you can basically customize anything within the Configurer i.e http.getConfigurer
 
 ## No Opaque Tokens
-- e.g jwt  ->> contains information inside it
+- e.g jwt  ->> No Opaque (SELF-CONTAINED) contains information inside it
+- opaque (REFERENCE) contains no details however the details can be gotten by 
+  - POST calling the _**introspection_endpoint**_ found in the _**http://localhost:8080/.well-known/openid-configuration**_
+  - with params token : <opaque token>  and basic auth client id and client secret
+
+## disabling access token
+- minimize time to live
+- use the revocation endpoint  found in  found in the _**http://localhost:8080/.well-known/openid-configuration**_
+- with params token : <access token>  and basic auth client id and client secret

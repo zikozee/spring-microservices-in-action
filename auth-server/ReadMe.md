@@ -25,3 +25,24 @@
 ## Registered Client Repository using Jpa and JdBcTemplate
 - Jpa: https://gist.github.com/sjohnr/0c6065d90d11a0f24bd3f15cbbaa8527
 - JdbcTemplate: https://huongdanjava.com/store-registeredclient-to-database-in-spring-authorization-server.html
+
+## Client credentials by Orchestrators
+- say we need kubernetes to do a liveness and readiness probe on our service, then it must connect with client credentials
+
+
+## user a OAuth2TokenCustomer bean  to add more details to your token
+- here you can pull database details you wanna show
+  - optionally you could always call the db from the resource to get what you need
+- note however, the larger the claims the slower it is encrypted and slower it takes to be transmitted over http
+
+## Multiple, grantypes, AuthMethod and redirectUris
+- you could have several client that require different redirect_uri based on may web, mobile
+- hence we could configure several URI for that client but on request, will specify in the url call as well as POST call
+
+
+## CustomRedirectUriValidator
+- added this in order to be able to remove restriction and validate in this case authorizationEndpoint ::: Testing Purposes alone
+- you can basically customize anything within the Configurer i.e http.getConfigurer
+
+## No Opaque Tokens
+- e.g jwt  ->> contains information inside it

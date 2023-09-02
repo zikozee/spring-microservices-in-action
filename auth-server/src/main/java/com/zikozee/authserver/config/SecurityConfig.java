@@ -3,6 +3,7 @@ package com.zikozee.authserver.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -12,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
+import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationCodeAuthenticationProvider;
+import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationCodeRequestAuthenticationProvider;
 import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
@@ -19,11 +22,15 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
+import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 
 @Configuration
@@ -36,6 +43,9 @@ public class SecurityConfig {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(httpSecurity);
 
         httpSecurity.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
+                .authorizationEndpoint(
+                        a -> a.authenticationProviders(getAuthorizationEndpointProviders())
+                ) // todo remove me, used to customize the authorizationEndpoint
                 .oidc(Customizer.withDefaults());
 
         httpSecurity.exceptionHandling(
@@ -47,9 +57,19 @@ public class SecurityConfig {
         return httpSecurity.build();
     }
 
+    private Consumer<List<AuthenticationProvider>> getAuthorizationEndpointProviders() {
+        return providers -> {
+            for(AuthenticationProvider p: providers){
+                if(p instanceof OAuth2AuthorizationCodeRequestAuthenticationProvider x){
+                    x.setAuthenticationValidator(new CustomRedirectUriValidator());
+                }
+            }
+        };
+    }
+
     @Bean
     @Order(2)
-    public SecurityFilterChain appSecurityFilterChain(HttpSecurity http) throws Exception { // app filter chain
+    public SecurityFilterChain appSecurityFilterChain(HttpSecurity http) throws Exception { // app filter chain - form login setup authentication
         http.formLogin(Customizer.withDefaults())
                 .authorizeHttpRequests(authz -> authz.anyRequest().authenticated());
         return http.build();
@@ -107,17 +127,36 @@ public class SecurityConfig {
 
                 .clientAuthenticationMethods(authMethods -> {
                     authMethods.add(ClientAuthenticationMethod.NONE);
-                }) // this means you have to authenticate as basic auth as client_id and secret
+                }) // this means no authentication
 
-                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-//                .clientSettings(ClientSettings.builder()
+                .authorizationGrantTypes(grantTypes -> {
+                    grantTypes.add(AuthorizationGrantType.AUTHORIZATION_CODE);
+                    grantTypes.add(AuthorizationGrantType.REFRESH_TOKEN);
+                })
+                .clientSettings(ClientSettings.builder()
 //                        .requireAuthorizationConsent(false) // authorization code, device code
-//                        .requireProofKey(true)// pkce
-//                        .build())
+                        .requireProofKey(true)// pkce
+                        .build())
                 .build();
 
-        return new InMemoryRegisteredClientRepository(r1, r2);
+        RegisteredClient r3 = RegisteredClient.withId(UUID.randomUUID().toString())
+                .clientId("client-pass")
+                .clientSecret("secret-pass")
+                .scope(OidcScopes.OPENID)
+                .scope(OidcScopes.PROFILE)
+                .redirectUri("https://springone.io/authorized")
+
+                .clientAuthenticationMethods(authMethods -> {
+                    authMethods.add(ClientAuthenticationMethod.CLIENT_SECRET_BASIC);
+                }) // this means no authentication
+
+                .authorizationGrantTypes(grantTypes -> {
+                    grantTypes.add(AuthorizationGrantType.PASSWORD);
+                })
+                .build();
+
+
+        return new InMemoryRegisteredClientRepository(r1, r2, r3);
     }
 
     @Bean
@@ -143,4 +182,10 @@ public class SecurityConfig {
 //        JWKSet set = new JWKSet(key);
 //        return new ImmutableJWKSet<>(set);
 //    }
+
+    @Bean
+    public OAuth2TokenCustomizer<JwtEncodingContext> oAuth2TokenCustomizer(){
+        return context -> context.getClaims()
+                .claim("test", "test");
+    }
 }

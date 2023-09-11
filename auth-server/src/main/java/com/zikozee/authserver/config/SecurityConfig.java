@@ -79,6 +79,8 @@ public class SecurityConfig {
         return http.build();
     }
 
+    // CustomUserDetailsService is now the bean
+    /**
     @Bean
     public UserDetailsService userDetailsService(){
        var uds = User.withUsername("user")
@@ -88,12 +90,15 @@ public class SecurityConfig {
 
        return new InMemoryUserDetailsManager(uds);
     }
+     **/
 
     @Bean
     public PasswordEncoder passwordEncoder(){
         return NoOpPasswordEncoder.getInstance();
     }
 
+    //Already a bean CustomCLientService
+    /**
     @Bean
     public RegisteredClientRepository registeredClientRepository(){
 
@@ -167,6 +172,8 @@ public class SecurityConfig {
 
         return new InMemoryRegisteredClientRepository(r1, r2, r3);
     }
+
+     **/
 
     @Bean
     public AuthorizationServerSettings authorizationServerSettings(){

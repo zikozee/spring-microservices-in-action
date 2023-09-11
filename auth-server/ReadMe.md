@@ -54,3 +54,16 @@
 - minimize time to live
 - use the revocation endpoint  found in  found in the _**http://localhost:8080/.well-known/openid-configuration**_
 - with params token : <access token>  and basic auth client id and client secret
+
+
+## switching userdetails and clients to database
+- added dependencies for jpa and mssql
+- added entites and repositories
+- design your table relation where a table hold all the supported auth_method, grantTypes, scopes
+  - user 1 - * redirect uris
+  - user * - * authorities
+  - client 1 - * redirect uris
+  - client * - * auth_method
+  - client * - * scope
+  - client * - * grant type
+  - client 1 - 1 token settings

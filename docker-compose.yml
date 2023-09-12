@@ -41,6 +41,25 @@ services:
       - ostock-network
 
 
+  authorization-server:
+    container_name: authorization-server
+    image: auth-server:1.0
+    ports:
+      - "9999:9999"
+    environment:
+      SPRING_PROFILES_ACTIVE: "dockerdev"
+      CONGIG_SERVER_HOST: configserver
+      ENCRYPT_KEY: "IMSYMMETRIC"
+      EUREKA_HOST: eurekaserver
+    depends_on:
+      - postgres
+      - configserver
+      - eurekaserver
+    networks:
+      - ostock-network
+    restart: unless-stopped
+
+
   license-service:
     container_name: license-service
     image: license-service:1.0

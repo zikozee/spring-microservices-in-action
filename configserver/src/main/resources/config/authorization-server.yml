@@ -1,0 +1,42 @@
+server:
+  port: 9999
+
+
+example:
+  property: I AM THE AUTH SERVER DEFAULT
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create
+    database: POSTGRESQL
+
+    show-sql: true
+    hibernate.naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    properties.hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  datasource:
+    platform: postgres
+    testWhileIdle: true
+    validationQuery: SELECT 1
+  database:
+    driverClassName: org.postgresql.Driver
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+    enabled-by-default: true
+
+eureka:
+  instance:
+    # prefer the IP address of the service rather than the server name
+    preferIpAddress: true
+  client:
+    # register the service with the eureka server
+    registerWithEureka: true
+    # pulls down a copy of the registry
+    fetchRegistry: true
+    # sets the location of the eureka service
+    serviceUrl:
+      defaultZone: 'http://${EUREKA_HOST:localhost}:8070/eureka/'

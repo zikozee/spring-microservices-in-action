@@ -59,5 +59,5 @@
 - we can also set in environment variable: **ENCRYPT_KEY=IMSYMMETRIC**
 - by adding this property config server makes available **/encrypt** and **/decrypt** endpoints
 - we call a post request with **http(s)://<host>:<port>/encrypt** using raw (postman)
-- we get back the encrypted value:: we then uupdate property to  
+- we get back the encrypted value:: we then update property to  
   - key: {cipher}ENCRYPTED_PROPERTY

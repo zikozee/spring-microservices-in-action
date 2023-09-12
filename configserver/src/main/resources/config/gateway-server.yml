@@ -34,6 +34,16 @@ spring:
             #- StripPrefix=2   # to strip say the first api/v1  say we had api/v1/organization-service but the service has no api/v1
             # Rewrites the request path from /organization/** to /**
             - RewritePath=/organization/(?<path>.*), /$\{path}
+        - id: authorization-service
+          uri: lb://authorization-server
+
+          predicates:
+            - Path=/auth/**
+
+          filters:
+            #- StripPrefix=2   # to strip say the first api/v1  say we had api/v1/organization-service but the service has no api/v1
+            # Rewrites the request path from /organization/** to /**
+            - RewritePath=/auth/(?<path>.*), /$\{path}
 
 management.endpoint.gateway.enabled: true
 management.endpoints.web.exposure.include: health,gateway

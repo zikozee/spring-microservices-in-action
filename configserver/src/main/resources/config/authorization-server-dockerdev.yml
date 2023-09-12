@@ -1,0 +1,7 @@
+example:
+  property: I AM Authorization Server DOCKER DEV
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/ostock_dev
+    username: postgres
+    password: '{cipher}7ad1b5b937eacb56e1d8cc76e53d090da40c7259c2037363848c48e55f3aa95e'

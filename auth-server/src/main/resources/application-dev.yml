@@ -1,6 +1,0 @@
-spring:
-  datasource:
-    username:
-    password:
-    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    url:

@@ -52,7 +52,7 @@
 
 ## disabling access token
 - minimize time to live
-- use the revocation endpoint  found in  found in the _**http://localhost:8080/.well-known/openid-configuration**_
+- use the revocation endpoint found in the _**http://localhost:8080/.well-known/openid-configuration**_
 - with params token : <access token>  and basic auth client id and client secret
 
 

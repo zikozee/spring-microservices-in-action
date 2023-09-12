@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -90,8 +91,8 @@ public class LicenseController {
 
     @GetMapping(value="/{licenseId}/{clientType}")
     public ResponseEntity<License> getLicensesWithClient(@PathVariable("organizationId") String organizationId,
-                                                @PathVariable("licenseId") String licenseId,
-                                                @PathVariable("clientType") String clientType) {
+                                                         @PathVariable("licenseId") String licenseId,
+                                                         @PathVariable("clientType") String clientType, Authentication a) {
         return ResponseEntity.ok(licenseService.getLicense(licenseId, organizationId, clientType));
     }
 

@@ -16,6 +16,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.oauth2ResourceServer(
                 r -> r.jwt().jwkSetUri(jwksUri)
+                        .jwtAuthenticationConverter(new CustomJwtAuthenticationTokenConverter())
         );
         http.authorizeHttpRequests().anyRequest().authenticated();
         return http.build();

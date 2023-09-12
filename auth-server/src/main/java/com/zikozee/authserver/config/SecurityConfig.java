@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
@@ -180,7 +181,7 @@ public class SecurityConfig {
         return AuthorizationServerSettings.builder().build(); // Oauth urls
     }
 
-//    @Bean // not necessary with spring boot
+//    @Bean // read the keys from a config or vault and rotate frequently instead of generating in memory
 //    public JWKSource<SecurityContext> jwkSource() throws NoSuchAlgorithmException {
 //        KeyPairGenerator kg = KeyPairGenerator.getInstance("RSA");
 //        kg.initialize(2048);
@@ -201,7 +202,15 @@ public class SecurityConfig {
 
     @Bean
     public OAuth2TokenCustomizer<JwtEncodingContext> oAuth2TokenCustomizer(){
-        return context -> context.getClaims()
-                .claim("test", "test");
+        return context -> {
+            context.getClaims()
+                    .claim("test", "test");
+
+            var authorities = context.getPrincipal().getAuthorities(); // GrantedAuthority
+
+            context.getClaims().claim("authorities", authorities.stream().map(GrantedAuthority::getAuthority).toList()); //List<String
+        };
+
+
     }
 }

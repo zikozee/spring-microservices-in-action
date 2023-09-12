@@ -4,11 +4,13 @@ import com.zikozee.authserver.entity.Client;
 import com.zikozee.authserver.repository.ClientRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.stereotype.Service;
 
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -32,6 +34,7 @@ public class CustomClientService implements RegisteredClientRepository {
     public RegisteredClient findByClientId(String clientId) {
         Client client = clientRepository.findByClientId(clientId)
                 .orElseThrow();
+        log.info("Client:: ->> {}", client);
         return Client.from(client);
     }
 }

@@ -177,3 +177,14 @@ spring:
 
 ## Rate Limiter -> allow X  number of calls every Y second 
 - in cloud up-to-date - architectures, its a good option to include auto-scaling
+
+## jwk.uri
+- call http//<AUTH-SERVER>/.well-known/openid-configuration
+- then check for jwks_uri ::: the endpoint is what will be used 
+- this uri is used alternatively to setting up the private key on the auth server and the public key on the resource server
+  - which can be tedious in rotation
+  - however, the uri case, only the auth-server keys need to be rotated
+
+## purpose of jwtAuthenticationConverter::: CustomJwtAuthenticationTokenConverter
+- this is used to move the authorities from within authentication.principal.claim
+  - to authentication.authorities

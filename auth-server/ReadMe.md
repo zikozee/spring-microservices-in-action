@@ -1,4 +1,6 @@
 # GRANT TYPES
+
+## NOTE:: if yu are connected to wlan and calling auth-server via gateway, make the call via the wlan IP  http://<WLAN_IP_AS_HOST>:<PORT> ...
 ## a) Authorization Code
 # http://localhost:8080/oauth2/authorize?response_type=code&client_id=client&scope=openid&redirect_uri=https://springone.io/authorized
 - ensure the client id for the client is correct and the scopes allowed (space separated), also the redirect uri
@@ -55,6 +57,15 @@
 - use the revocation endpoint found in the _**http://localhost:8080/.well-known/openid-configuration**_
 - with params token : <access token>  and basic auth client id and client secret
 
+## Difference between Scope And Authorities
+- Scope are for the client, Authorities are for the user
+- if you use openid protocol, you must use the predefined or customized scopes
+- if you use Oauth2, you can use any kind of scope in this case our authorities, inclusive of the openid scopes
+
+## purpose of jwtAuthenticationConverter::: CustomJwtAuthenticationTokenConverter
+- this is used to move the authorities from within authentication.principal.claim
+  - to authentication.authorities
+  
 
 ## switching userdetails and clients to database
 - added dependencies for jpa and mssql

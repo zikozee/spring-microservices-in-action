@@ -5,3 +5,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/ostock_dev
     username: postgres
     password: '{cipher}7ad1b5b937eacb56e1d8cc76e53d090da40c7259c2037363848c48e55f3aa95e'
+
+## via gateway hence 8072
+jwks:
+  uri: http://localhost:8072/auth/oauth2/jwks

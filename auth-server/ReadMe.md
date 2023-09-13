@@ -80,3 +80,9 @@
   - client * - * scope
   - client * - * grant type
   - client 1 - 1 token settings
+
+## Generating a private key
+- keytool -genkeypair -alias idea -keyalg RSA -keypass idea123 -keystore idea.jks -storepass idea123
+
+## Obtaining the public key:: not needed (rotating only on private server)
+- keytool -list -rfc --keystore idea.jks | openssl x509 -inform pem -pubkey

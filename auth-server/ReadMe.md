@@ -50,7 +50,7 @@
 - e.g jwt  ->> No Opaque (SELF-CONTAINED) contains information inside it
 - opaque (REFERENCE) contains no details however the details can be gotten by 
   - POST calling the _**introspection_endpoint**_ found in the _**http://localhost:8080/.well-known/openid-configuration**_
-  - with params token : <opaque token>  and basic auth client id and client secret
+  - with params token : <opaque token>  with basic auth of [client id and client secret]
 
 ## disabling access token
 - minimize time to live

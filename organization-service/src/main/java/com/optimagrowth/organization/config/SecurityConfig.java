@@ -9,15 +9,28 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
-    @Value("${jwks.uri}")
-    private String jwksUri;
+    @Value("${introspection.uri}")
+    private String introspectionUri;
+
+    @Value("${client.id}")
+    private String clientId;
+
+    @Value("${client.secret}")
+    private String clientSecret;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.oauth2ResourceServer(
-                r -> r.jwt().jwkSetUri(jwksUri)
-                        .jwtAuthenticationConverter(new CustomJwtAuthenticationTokenConverter())
-        );
+        http.oauth2ResourceServer(r ->
+                        r.opaqueToken()
+                                .introspectionUri(introspectionUri)
+                                .introspectionClientCredentials(clientId, clientSecret) //inject from vault
+                );
+
+//        http.oauth2ResourceServer()
+//                .opaqueToken()
+//                .introspectionUri(introspectionUri)
+//                .introspectionClientCredentials(clientId, clientSecret); //inject from vault
+
         http.authorizeHttpRequests().anyRequest().authenticated();
         return http.build();
     }

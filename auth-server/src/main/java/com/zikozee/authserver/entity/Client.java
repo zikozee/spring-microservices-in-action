@@ -7,6 +7,7 @@ import lombok.ToString;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
+import org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 
 import java.time.Duration;
@@ -27,6 +28,7 @@ public class Client {
     private String authMethod;
     private String grantType;
     private String redirectUri;
+    private String tokenFormat;
 
     public static Client from(RegisteredClient registeredClient){
         Client client = new Client();
@@ -46,6 +48,7 @@ public class Client {
         client.setGrantType(
                 registeredClient.getAuthorizationGrantTypes().stream().findAny().get().getValue()
         );// same as above
+        client.setTokenFormat(registeredClient.getTokenSettings().getAccessTokenFormat().getValue());
 
         return client;
     }
@@ -58,7 +61,9 @@ public class Client {
                 .redirectUri(client.redirectUri)
                 .clientAuthenticationMethod(new ClientAuthenticationMethod(client.getAuthMethod()))
                 .authorizationGrantType(new AuthorizationGrantType(client.getGrantType()))
-                .tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofHours(24)).build())
+                .tokenSettings(TokenSettings.builder()
+                        .accessTokenFormat(new OAuth2TokenFormat(client.getTokenFormat()))
+                        .accessTokenTimeToLive(Duration.ofHours(24)).build())
                 .build();
     }
 }

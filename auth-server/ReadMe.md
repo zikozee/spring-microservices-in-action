@@ -82,7 +82,7 @@
   - client 1 - 1 token settings
 
 ## Generating a private key
-- keytool -genkeypair -alias idea -keyalg RSA -keypass idea123 -keystore idea.jks -storepass idea123
+- keytool -genkeypair -alias tech -keyalg RSA -keypass 2023techAdventurers -keystore idea.jks -storepass 2023techAdventurers
 
 ## Obtaining the public key:: not needed (rotating only on private server)
 - keytool -list -rfc --keystore idea.jks | openssl x509 -inform pem -pubkey

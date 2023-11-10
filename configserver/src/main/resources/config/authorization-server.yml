@@ -1,4 +1,6 @@
 server:
+  # ensures the url passed in is where it is redirected to
+  forward-headers-strategy: framework
   port: 9999
 
 

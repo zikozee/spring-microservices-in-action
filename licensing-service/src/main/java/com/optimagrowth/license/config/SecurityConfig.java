@@ -14,11 +14,16 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.oauth2ResourceServer(
-                r -> r.jwt().jwkSetUri(jwksUri)
-                        .jwtAuthenticationConverter(new CustomJwtAuthenticationTokenConverter())
+
+        http.oauth2ResourceServer(resourceCustomizer ->
+                resourceCustomizer
+                        .jwt(jwtCustomizer ->
+                                        jwtCustomizer.jwkSetUri(jwksUri)
+                                                .jwtAuthenticationConverter(new CustomJwtAuthenticationTokenConverter())
+                        )
         );
-        http.authorizeHttpRequests().anyRequest().authenticated();
+
+        http.authorizeHttpRequests(c -> c.anyRequest().authenticated());
         return http.build();
     }
 }

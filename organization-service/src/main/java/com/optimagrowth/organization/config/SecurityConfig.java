@@ -20,18 +20,14 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.oauth2ResourceServer(r ->
-                        r.opaqueToken()
-                                .introspectionUri(introspectionUri)
+        http.oauth2ResourceServer(resourceCustomizer ->
+                resourceCustomizer.opaqueToken(opaqueCustomizer ->
+                        opaqueCustomizer.introspectionUri(introspectionUri)
                                 .introspectionClientCredentials(clientId, clientSecret) //inject from vault
-                );
+                )
+        );
 
-//        http.oauth2ResourceServer()
-//                .opaqueToken()
-//                .introspectionUri(introspectionUri)
-//                .introspectionClientCredentials(clientId, clientSecret); //inject from vault
-
-        http.authorizeHttpRequests().anyRequest().authenticated();
+        http.authorizeHttpRequests(c -> c.anyRequest().authenticated());
         return http.build();
     }
 }

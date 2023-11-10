@@ -16,6 +16,7 @@ import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -76,13 +77,13 @@ public class LicenseService {
         return responseMessage;
     }
 
-    public License getLicense(String licenseId, String organizationId, String clientType){
+    public License getLicense(String licenseId, String organizationId, String clientType, Jwt token){
         License license = licenseRepository.findByOrganizationIdAndLicenseId(organizationId, licenseId);
         if (null == license) {
             throw new IllegalArgumentException(String.format(messageSource.getMessage("license.search.error.message", null, null),licenseId, organizationId));
         }
 
-        Organization organization = retrieveOrganizationInfo(organizationId, clientType);
+        Organization organization = retrieveOrganizationInfo(organizationId, clientType, token);
         if (null != organization) {
             license.setOrganizationName(organization.getName());
             license.setContactName(organization.getContactName());
@@ -93,7 +94,7 @@ public class LicenseService {
         return license.withComment(serviceConfig.getProperty());
     }
 
-    private Organization retrieveOrganizationInfo(String organizationId, String clientType) {
+    private Organization retrieveOrganizationInfo(String organizationId, String clientType, Jwt token) {
         Organization organization = null;
 
         switch (clientType) {
@@ -103,14 +104,14 @@ public class LicenseService {
                 break;
             case "rest":
                 System.out.println("I am using the rest client");
-                organization = organizationRestTemplateClient.getOrganization(organizationId);
+                organization = organizationRestTemplateClient.getOrganization(organizationId, token);
                 break;
             case "discovery":
                 System.out.println("I am using the discovery client");
                 organization = organizationDiscoveryClient.getOrganization(organizationId);
                 break;
             default:
-                organization = organizationRestTemplateClient.getOrganization(organizationId);
+                organization = organizationRestTemplateClient.getOrganization(organizationId, token);
         }
 
         return organization;

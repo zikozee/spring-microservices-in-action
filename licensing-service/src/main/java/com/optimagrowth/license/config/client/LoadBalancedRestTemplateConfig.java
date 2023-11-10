@@ -32,4 +32,18 @@ public class LoadBalancedRestTemplateConfig {
 
         return restTemplate;
     }
+
+    @Bean(name = "all")
+    public RestTemplate allRestTemplate(){
+        RestTemplate restTemplate = new RestTemplate();
+        List<ClientHttpRequestInterceptor> interceptors = restTemplate.getInterceptors();
+        if(interceptors.isEmpty()) {
+            restTemplate.setInterceptors(Collections.singletonList(new UserContextInterceptor()));
+        }else {
+            interceptors.add(new UserContextInterceptor());
+            restTemplate.setInterceptors(interceptors);
+        }
+
+        return restTemplate;
+    }
 }

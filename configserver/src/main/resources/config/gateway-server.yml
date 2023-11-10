@@ -19,9 +19,9 @@ spring:
     gateway:
       # automated mapping of routes via service discovery
       # Enables the gateway to create routes based on services registered with service discovery
-      discovery.locator:
-        enabled: true
-        lowerCaseServiceId: true
+#      discovery.locator:
+#        enabled: true
+#        lowerCaseServiceId: true
       # manual mapping of routes via service discovery
       routes:
         - id: organization-service
@@ -34,6 +34,20 @@ spring:
             #- StripPrefix=2   # to strip say the first api/v1  say we had api/v1/organization-service but the service has no api/v1
             # Rewrites the request path from /organization/** to /**
             - RewritePath=/organization/(?<path>.*), /$\{path}
+          # to forward Authorization and disable Cookie and Set-Cookie
+          RemoveRequestHeader: Cookie,Set-Cookie
+        - id: licensing-service
+          uri: lb://licensing-service
+
+          predicates:
+            - Path=/licensing-service/**
+
+          filters:
+            #- StripPrefix=2   # to strip say the first api/v1  say we had api/v1/organization-service but the service has no api/v1
+            # Rewrites the request path from /organization/** to /**
+            - RewritePath=/licensing-service/(?<path>.*), /$\{path}
+          # to forward Authorization and disable Cookie and Set-Cookie
+          RemoveRequestHeader: Cookie,Set-Cookie
         - id: authorization-service
           uri: lb://authorization-server
 
@@ -44,6 +58,8 @@ spring:
             #- StripPrefix=2   # to strip say the first api/v1  say we had api/v1/organization-service but the service has no api/v1
             # Rewrites the request path from /organization/** to /**
             - RewritePath=/auth/(?<path>.*), /$\{path}
+          # to forward Authorization and disable Cookie and Set-Cookie
+          RemoveRequestHeader: Cookie,Set-Cookie
 
 management.endpoint.gateway.enabled: true
 management.endpoints.web.exposure.include: health,gateway

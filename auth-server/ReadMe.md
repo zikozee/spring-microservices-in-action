@@ -3,6 +3,8 @@
 ## NOTE:: if yu are connected to wlan and calling auth-server via gateway, make the call via the wlan IP  http://<WLAN_IP_AS_HOST>:<PORT> ...
 ## a) Authorization Code
 # http://localhost:8080/oauth2/authorize?response_type=code&client_id=client&scope=openid&redirect_uri=https://springone.io/authorized
+# to ensure the url passed in is where it is redirected to hence we can avoid using wlan IP below
+  server.forward-headers-strategy: framework
 # http://<WLAN_IP>:<GATEWAY_PORT OR AUTH_PORT>/oauth2/authorize?response_type=code&client_id=client&scope=openid&redirect_uri=https://springone.io/authorized
 - ensure the client id for the client is correct and the scopes allowed (space separated), also the redirect uri
 - upon return, get the code

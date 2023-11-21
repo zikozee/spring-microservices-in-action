@@ -1,6 +1,7 @@
 package com.optimagrowth.license.service.client;
 
 import com.optimagrowth.license.model.Organization;
+import com.optimagrowth.license.service.SecurityContextUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.*;
@@ -30,12 +31,11 @@ public class OrganizationRestTemplateClient {
     @Qualifier(value = "all")
     private final RestTemplate allRestTemplate;
 
-    public Organization getOrganization(String organizationId, Jwt token){
+    private final SecurityContextUtil securityContextUtil;
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(token.getTokenValue());
-        HttpEntity http = new HttpEntity(headers);
+    public Organization getOrganization(String organizationId){
+
+        HttpEntity http = new HttpEntity(securityContextUtil.jwtHttpHeaders());
 //        ResponseEntity<Organization> restExchange = restTemplate
 //                .exchange("http://organization-service/v1/organization/{organizationId}", HttpMethod.GET,
 //                        http, Organization.class, organizationId);

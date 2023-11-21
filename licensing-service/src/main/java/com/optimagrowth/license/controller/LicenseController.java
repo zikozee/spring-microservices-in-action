@@ -96,8 +96,8 @@ public class LicenseController {
     @GetMapping(value="/{licenseId}/{clientType}")
     public ResponseEntity<License> getLicensesWithClient(@PathVariable("organizationId") String organizationId,
                                                          @PathVariable("licenseId") String licenseId,
-                                                         @PathVariable("clientType") String clientType,  @AuthenticationPrincipal Jwt token) {
-        return ResponseEntity.ok(licenseService.getLicense(licenseId, organizationId, clientType, token));
+                                                         @PathVariable("clientType") String clientType) {
+        return ResponseEntity.ok(licenseService.getLicense(licenseId, organizationId, clientType));
     }
 
     @GetMapping

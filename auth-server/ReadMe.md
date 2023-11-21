@@ -24,6 +24,12 @@
   - Params: client id, grant_type, redirect uri, code gotten, code verifier 
   - with client id and secret as basic auth
 
+## c) password grant
+- https://www.youtube.com/watch?v=6xMlByIRQSQ&ab_channel=SpringBootTUTORIAL.
+- https://github.com/wdkeyser02/SpringAuthorizationServerCustomPasswordGrantType/blob/main/SpringAuthorizationServerCustomPasswordGrantType/src/main/java/willydekeyser/security/CustomCodeGrantAuthenticationProvider.java
+- https://docs.spring.io/spring-authorization-server/docs/current/reference/html/guides/how-to-ext-grant-type.html#implement-authentication-provider
+
+
 ## get public key for resource server to use
 - http://localhost:8080/oauth2/jwks
 

@@ -77,13 +77,13 @@ public class LicenseService {
         return responseMessage;
     }
 
-    public License getLicense(String licenseId, String organizationId, String clientType, Jwt token){
+    public License getLicense(String licenseId, String organizationId, String clientType){
         License license = licenseRepository.findByOrganizationIdAndLicenseId(organizationId, licenseId);
         if (null == license) {
             throw new IllegalArgumentException(String.format(messageSource.getMessage("license.search.error.message", null, null),licenseId, organizationId));
         }
 
-        Organization organization = retrieveOrganizationInfo(organizationId, clientType, token);
+        Organization organization = retrieveOrganizationInfo(organizationId, clientType);
         if (null != organization) {
             license.setOrganizationName(organization.getName());
             license.setContactName(organization.getContactName());
@@ -94,7 +94,7 @@ public class LicenseService {
         return license.withComment(serviceConfig.getProperty());
     }
 
-    private Organization retrieveOrganizationInfo(String organizationId, String clientType, Jwt token) {
+    private Organization retrieveOrganizationInfo(String organizationId, String clientType) {
         Organization organization = null;
 
         switch (clientType) {
@@ -104,14 +104,14 @@ public class LicenseService {
                 break;
             case "rest":
                 System.out.println("I am using the rest client");
-                organization = organizationRestTemplateClient.getOrganization(organizationId, token);
+                organization = organizationRestTemplateClient.getOrganization(organizationId);
                 break;
             case "discovery":
                 System.out.println("I am using the discovery client");
                 organization = organizationDiscoveryClient.getOrganization(organizationId);
                 break;
             default:
-                organization = organizationRestTemplateClient.getOrganization(organizationId, token);
+                organization = organizationRestTemplateClient.getOrganization(organizationId);
         }
 
         return organization;

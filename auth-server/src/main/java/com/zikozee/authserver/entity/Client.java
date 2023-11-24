@@ -61,6 +61,7 @@ public class Client {
                 .redirectUri(client.redirectUri)
                 .clientAuthenticationMethod(new ClientAuthenticationMethod(client.getAuthMethod()))
                 .authorizationGrantType(new AuthorizationGrantType(client.getGrantType()))
+                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                 .tokenSettings(TokenSettings.builder()
                         .accessTokenFormat(new OAuth2TokenFormat(client.getTokenFormat()))
                         .accessTokenTimeToLive(Duration.ofHours(24)).build())

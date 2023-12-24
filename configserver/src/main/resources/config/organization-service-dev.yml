@@ -6,6 +6,11 @@ spring:
     username: postgres
     password: '{cipher}7ad1b5b937eacb56e1d8cc76e53d090da40c7259c2037363848c48e55f3aa95e'
 
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+    topic: orgChangeTopic
+
 ## via gateway hence 8072
 introspection:
   uri: http://localhost:9999/oauth2/introspect
@@ -13,3 +18,6 @@ introspection:
 client:
   id: '{cipher}52de1bf7b0c7fcdf4ed84a341c0c191521e9ea746ba15c1603fcc294246c3530'
   secret: '{cipher}ba19e629054335d5adde90bb54b239f6de0540c7d2c1ce4f85dcc157ffca084f'
+
+jwks:
+  uri: http://localhost:8072/auth/oauth2/jwks

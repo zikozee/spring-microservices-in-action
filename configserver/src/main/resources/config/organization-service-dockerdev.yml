@@ -6,6 +6,22 @@ spring:
     username: postgres
     password: '{cipher}7ad1b5b937eacb56e1d8cc76e53d090da40c7259c2037363848c48e55f3aa95e'
 
+
+  #  cloud:
+  #    stream:
+  #      bindings:
+  #        output:
+  #          destination: orgChangeTopic
+  #          content-type: application/json
+  #      kafka:
+  #        binder:
+  #          zkNodes: localhost
+  #          brokers: localhost
+  kafka:
+    producer:
+      bootstrap-servers: ${BOOTSTRAP_SERVERS:localhost:9092}
+    topic: ${KAFKA_TOPIC:orgChangeTopic}
+
 ## via gateway hence
 jwks:
   uri: http://gateway-service:8072/auth/oauth2/jwks

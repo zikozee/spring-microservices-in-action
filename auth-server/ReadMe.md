@@ -39,8 +39,8 @@
 
 ## Client credentials by Orchestrators
 - say we need kubernetes to do a liveness and readiness probe on our service, then it must connect with client credentials
-
-
+- any resource we want an authenticated client to view or access,  we don't put in pathMatcher, we don't add PreAuthorize
+  - no authorities required. e.g status/health
 ## user a OAuth2TokenCustomer bean  to add more details to your token
 - here you can pull database details you wanna show
   - optionally you could always call the db from the resource to get what you need

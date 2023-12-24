@@ -191,3 +191,11 @@ spring:
 
 ## if you need to add more custom details to the token extend JwtAuthenticationToken directly
 - CustomJwtAuthenticationToken extends JwtAuthenticationToken
+
+
+## Consumer Group
+- we can have multiple services with each service having multiple instances listening to the same message queue
+  - we want each unique service to process a copy of the message, but only want one service instance within a group
+  - of service instances to consume and process the message
+  - the message broker guarantees that pnly one copy of the message will be consumed by a service instance belonging 
+  - to the group

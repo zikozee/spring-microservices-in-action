@@ -1,5 +1,7 @@
 example:
   property: I AM LICENSE DOCKER DEV
+  redisServer: localhost
+  redisPort: 6379
 spring:
   datasource:
     url: jdbc:postgresql://postgres:5432/ostock_dev

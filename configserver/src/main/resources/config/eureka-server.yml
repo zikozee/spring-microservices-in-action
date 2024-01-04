@@ -16,3 +16,21 @@ eureka:
   server:
     # sets the initial time wait before the server takes requests
     wait-time-in-ms-when-sync-empty: 5
+
+logging:
+  pattern:
+    level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
+
+management.endpoint.gateway.enabled: true
+management.endpoints.web.exposure.include: health,gateway
+management.tracing.sampling.probability: 1.0
+#management:
+#  endpoints:
+#    gateway:
+#      enabled: true
+#    web:
+#      exposure:
+#        include: health,gateway
+#  tracing:
+#    sampling:
+#      probability: 1.0

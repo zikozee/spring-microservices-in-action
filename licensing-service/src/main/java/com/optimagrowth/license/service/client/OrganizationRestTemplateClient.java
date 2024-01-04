@@ -1,11 +1,14 @@
 package com.optimagrowth.license.service.client;
 
+import brave.ScopedSpan;
+import brave.Tracer;
 import com.optimagrowth.license.model.Organization;
 import com.optimagrowth.license.service.SecurityContextUtil;
 import com.optimagrowth.license.utils.CacheUtil;
 import com.optimagrowth.license.utils.UserContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
@@ -31,13 +34,20 @@ public class OrganizationRestTemplateClient {
     private final SecurityContextUtil securityContextUtil;
     private final CacheUtil cacheUtil;
 
+    @Autowired
+    Tracer tracer;
 
     private Organization checkRedisCache(String organizationId){
+        ScopedSpan newSpan = tracer.startScopedSpan("readLicensingDataFromRedis");
         try {
             return cacheUtil.getData(organizationId, Organization.class);
         }catch (Exception ex){
             log.error("Error encountered while trying to retrieve organization: {} check redis Cache. Exception: {}", organizationId, ex.getLocalizedMessage(), ex);
             return null;
+        }finally {
+            newSpan.tag("peer.service", "redis");
+            newSpan.annotate("Client received");
+            newSpan.finish();
         }
     }
 

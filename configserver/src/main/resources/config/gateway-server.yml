@@ -61,5 +61,24 @@ spring:
           # to forward Authorization and disable Cookie and Set-Cookie
           RemoveRequestHeader: Cookie,Set-Cookie
 
+logging:
+  pattern:
+    level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
+
 management.endpoint.gateway.enabled: true
 management.endpoints.web.exposure.include: health,gateway
+management.tracing.sampling.probability: 1.0
+#management:
+#  endpoints:
+#    gateway:
+#      enabled: true
+#    web:
+#      exposure:
+#        include: health,gateway
+#  tracing:
+#    sampling:
+#      probability: 1.0
+## default
+#  zipkin:
+#    tracing:
+#      endpoint: http://localhost:9411/api/v2/spans

@@ -27,7 +27,7 @@ public class OrganizationController {
 
     @PreAuthorize("hasAuthority('read')")
     @RequestMapping(value="/{organizationId}",method = RequestMethod.GET)
-    public ResponseEntity<Organization> getOrganization(@PathVariable("organizationId") String organizationId, Authentication authentication) {
+    public ResponseEntity<Organization> getOrganization(@PathVariable("organizationId") String organizationId) {
         return ResponseEntity.ok(service.findById(organizationId));
     }
 
@@ -46,8 +46,8 @@ public class OrganizationController {
     @PreAuthorize("hasAuthority('delete')")
     @RequestMapping(value="/{organizationId}",method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteOrganization( @PathVariable("id") String id,  @RequestBody Organization organization) {
-        service.delete(organization);
+    public void deleteOrganization( @PathVariable("organizationId") String organizationId) {
+        service.delete(organizationId);
     }
 
 }

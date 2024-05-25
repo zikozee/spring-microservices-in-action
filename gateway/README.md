@@ -77,3 +77,6 @@
     - we could log, authenticate etc, check headers etc
 - Post-filters -> after receiving response from target does its work before sending back to client
   - handle errors, audit response for sensitive info 
+
+
+## run the services as web and not web flux adn you will see the trace ID transition

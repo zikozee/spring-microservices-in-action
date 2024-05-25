@@ -1,6 +1,8 @@
 package com.zikozee.authserver;
 
 import lombok.extern.slf4j.Slf4j;
+import org.bouncycastle.crypto.generators.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -34,6 +36,9 @@ public class PkceUtil {
 
             String codeChallenge = generateCodeChallenge(codeVerifier);
             System.out.println("Code challenge = " + codeChallenge);
+
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            System.out.println(passwordEncoder.encode("12345"));
 
         } catch (UnsupportedEncodingException | NoSuchAlgorithmException ex) {
             log.error(ex.getMessage(), ex);

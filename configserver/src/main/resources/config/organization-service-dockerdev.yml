@@ -19,7 +19,7 @@ spring:
   #          brokers: localhost
   kafka:
     producer:
-      bootstrap-servers: ${BOOTSTRAP_SERVERS:localhost:9092}
+      bootstrap-servers: ${BOOTSTRAP_SERVER:localhost}:9092
     topic: ${KAFKA_TOPIC:orgChangeTopic}
 
 ## via gateway hence

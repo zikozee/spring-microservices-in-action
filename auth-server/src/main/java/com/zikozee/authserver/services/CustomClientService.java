@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 
 @Slf4j
-@Service
+//@Service
 @RequiredArgsConstructor
 @Transactional
 public class CustomClientService implements RegisteredClientRepository {

@@ -1,6 +1,6 @@
 #stage 1
 #Start with a base image containing Java runtime
-FROM openjdk:11-slim as build
+FROM amazoncorretto:21 as build
 
 # Add Maintainer Info
 LABEL maintainer="Ezekiel Eromosei <ezekiel.eromosei@gmail.com>"
@@ -16,7 +16,7 @@ RUN mkdir -p target/dependency && (cd target/dependency; jar -xf /app.jar)
 
 #stage 2
 #Same Java runtime
-FROM openjdk:11-slim
+FROM amazoncorretto:21
 
 #Add volume pointing to /tmp
 VOLUME /tmp

@@ -1,7 +1,7 @@
 ## BASIC DOCKER FILE START
 
 ##Start with a base image containing Java runtime
-#FROM amazoncorretto:21
+#FROM openjdk:11-slim
 #
 ## Add Maintainer Info
 #LABEL maintainer="Ezekiel Eromosei <ezekiel.eromosei@gmail.com>"
@@ -23,7 +23,7 @@
 
 ##stage 1
 ##Start with a base image containing Java runtime
-#FROM amazoncorretto:21 as build
+#FROM openjdk:11-slim as build
 #
 ## Add Maintainer Info
 #LABEL maintainer="Ezekiel Eromosei <ezekiel.eromosei@gmail.com>"
@@ -39,7 +39,7 @@
 #
 ##stage 2
 ##Same Java runtime
-#FROM amazoncorretto:21
+#FROM openjdk:11-slim
 #
 ##Add volume pointing to /tmp
 #VOLUME /tmp
@@ -56,6 +56,7 @@
 
 
 ## DOCKR FILE FOR LAYERED JARS
+#FROM openjdk:21-slim as build
 FROM amazoncorretto:21 as build
 WORKDIR application
 ARG JAR_FILE=target/*.jar

@@ -25,6 +25,8 @@ spring:
             - licensingservice
             - organizationservice
             - eurekaserver
+            - gatewayserver
+            - authorizationserver
           skip-ssl-validation: true
         vault:
           kv-version: 2

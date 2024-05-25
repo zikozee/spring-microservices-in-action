@@ -13,19 +13,33 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationCodeRequestAuthenticationProvider;
+import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
+import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
+import org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat;
+import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.util.StringUtils;
 
+import java.time.Duration;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 
 @Configuration
@@ -38,9 +52,11 @@ public class SecurityConfig {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(httpSecurity);
 
         httpSecurity.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
-                .authorizationEndpoint(
+             /*   .authorizationEndpoint(
                         a -> a.authenticationProviders(getAuthorizationEndpointProviders())
                 ) // todo remove me, used to customize the authorizationEndpoint
+
+              */
                 .oidc(Customizer.withDefaults());
 
         httpSecurity.exceptionHandling(
@@ -88,8 +104,7 @@ public class SecurityConfig {
         return NoOpPasswordEncoder.getInstance();
     }
 
-    //Already a bean CustomCLientService
-    /**
+    //todo there's a customized bean that talks to a db CustomClientService
     @Bean
     public RegisteredClientRepository registeredClientRepository(){
 
@@ -112,14 +127,15 @@ public class SecurityConfig {
                     grantTypes.add(AuthorizationGrantType.CLIENT_CREDENTIALS);
                 })
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-//                .clientSettings(ClientSettings.builder()
-//                        .requireAuthorizationConsent(false) // authorization code, device code
+                .clientSettings(ClientSettings.builder()
+                        .requireAuthorizationConsent(true) // authorization code, device code
 //                        .requireProofKey(true)// pkce
-//                        .build())
+                        .build())
                 .tokenSettings(TokenSettings.builder()
-                        .accessTokenTimeToLive(Duration.ofMinutes(30))
-                        .accessTokenFormat(OAuth2TokenFormat.REFERENCE) // opaque token, default is no-opaque (SELF_CONTAINED)
+                        .accessTokenTimeToLive(Duration.ofHours(24))
+                        .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED) // opaque token, default is no-opaque (SELF_CONTAINED)
                         .authorizationCodeTimeToLive(Duration.ofMinutes(10))
+                        .setting("authorities", List.of("read", "update", "update", "delete")) // for client credentials  ::: load from client table
                         .build())
                 .build();
 
@@ -164,7 +180,7 @@ public class SecurityConfig {
         return new InMemoryRegisteredClientRepository(r1, r2, r3);
     }
 
-     **/
+
 
     @Bean
     public AuthorizationServerSettings authorizationServerSettings(){
@@ -194,11 +210,18 @@ public class SecurityConfig {
     public OAuth2TokenCustomizer<JwtEncodingContext> oAuth2TokenCustomizer(){
         return context -> {
             context.getClaims()
-                    .claim("test", "test");
+                    .claim("test", "test")
+                    .claim("user_name", StringUtils.hasText(context.getPrincipal().getName()) ? context.getPrincipal().getName() : "");
 
             var authorities = context.getPrincipal().getAuthorities(); // GrantedAuthority
 
             context.getClaims().claim("authorities", authorities.stream().map(GrantedAuthority::getAuthority).toList()); //List<String
+
+            // set up database cached specific authorities for each client's client credential, i.e for client, clienty
+            if(context.getAuthorizationGrantType().getValue().equals(AuthorizationGrantType.CLIENT_CREDENTIALS.getValue())){
+                List<String> authz = context.getRegisteredClient().getTokenSettings().getSetting("authorities");
+                context.getClaims().claim("authorities", authz);
+            }
         };
 
 
